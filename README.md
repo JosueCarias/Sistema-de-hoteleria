@@ -1,4 +1,4 @@
-# Sistema-de-hoteler-a
+# Sistema de hoteleria
 Sistema que básicamente registra la reservación de habitaciones de un hotel.
 
 ## Grupo #3 
