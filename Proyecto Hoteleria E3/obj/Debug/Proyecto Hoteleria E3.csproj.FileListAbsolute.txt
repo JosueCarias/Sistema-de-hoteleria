@@ -1,0 +1,7 @@
+C:\Users\sebas\Desktop\Proyecto Hoteleria E3\bin\Debug\Proyecto Hoteleria E3.exe.config
+C:\Users\sebas\Desktop\Proyecto Hoteleria E3\bin\Debug\Proyecto Hoteleria E3.exe
+C:\Users\sebas\Desktop\Proyecto Hoteleria E3\bin\Debug\Proyecto Hoteleria E3.pdb
+C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.csproj.AssemblyReference.cache
+C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.csproj.CoreCompileInputs.cache
+C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.exe
+C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.pdb
