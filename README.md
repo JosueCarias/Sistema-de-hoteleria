@@ -12,3 +12,30 @@ Sistema que básicamente registra la reservación de habitaciones de un hotel.
 
 ## 22 feb
 - hello world
+
+## Tablas
+- 
+
+## Requerimientos
+- 
+
+## Manual de usuario
+-
+## Manual tecnico
+-
+
+
+# Entregas de Avances
+## Primera entrega 15/03/2025
+- Servidor de base de datos -Modelo relacional-
+## Segunda entrega 05/04/2025
+- Servidor de servicios -API REST-
+## Tercera entrega 19/04/2025
+- API-REST completa
+## Cuarta entrega 03/05/2025
+- Servidor de aplicaciones -CRUD- formulario HTML
+## Quinta entrega 17/05/2025
+- Diseño de reportes
+
+
+
