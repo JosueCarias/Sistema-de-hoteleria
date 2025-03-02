@@ -8,7 +8,7 @@ Sistema que básicamente registra la reservación de habitaciones de un hotel.
 - Sebastian Agusto Davila Perez Carnet: 5190-24-3667
 - Erick Estuardo De Leon Agustion Carnet: 
 - Jose Andres Moreales Culajay Carnet: 
-- Nuevo
+- JOSÉ DANIEL PERALTA ALVARADO
 
 ## 22 feb
 - hello world
