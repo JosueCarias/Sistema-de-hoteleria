@@ -4,148 +4,167 @@ FROM sys.databases
 WHERE name = 'hoteleriaGrupo3';
 
 -- Eliminar base de datos si es que ya existe
-use master; -- Utilizamos otra base de datos en caso de que ya usemos la que vamos a eliminar, de lo contrario dar· error
-drop database if exists hoteleriaGrupo3;
+USE master; -- Utilizamos otra base de datos en caso de que ya usemos la que vamos a eliminar, de lo contrario dar√° error
+
 
 -- Crear base de datos
-create database hoteleriaGrupo3;
+CREATE DATABASE hoteleriaGrupo3;
 
 -- Usar la base de datos
-use hoteleriaGrupo3;
+USE hoteleriaGrupo3;
 
--- SecciÛn de creaciÛn de tablas
+-- Secci√≥n de creaci√≥n de tablas
 
 -- Hotel
-create table hotel(
-	hotel_id int identity(1,1) not null,
-	nombre varchar(50) not null,
-	descripcion varchar(150),
-	ubicacion varchar(150) not null,
-	primary key (hotel_id)
+CREATE TABLE hotel (
+    hotel_id INT IDENTITY(1,1) NOT NULL,
+    nombre VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(150),
+    ubicacion VARCHAR(150) NOT NULL,
+    PRIMARY KEY (hotel_id)
 );
 
-select * from hotel;
+SELECT * FROM hotel;
 
 -- Cliente
-create table cliente(
-	cliente_dpi bigint not null,
-	nombres varchar(50) not null,
-	apellidos varchar(50) not null,
-	email varchar(100) not null,
-	telefono varchar(8) not null,
-	primary key (cliente_dpi)
+CREATE TABLE cliente (
+    cliente_dpi BIGINT NOT NULL,
+    nombres VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    telefono VARCHAR(8) NOT NULL,
+    PRIMARY KEY (cliente_dpi)
 );
 
-select * from cliente;
+SELECT * FROM cliente;
 
 -- Empleado
-create table empleado(
-	empleado_id int identity(1,1) not null,
-	nombres varchar(50) not null,
-	apellidos varchar(50) not null,
-	email varchar(100) not null,
-	telefono varchar(8) not null,
-	fecha_nacimiento date not null,
-	hotel_id int not null,
-	primary key (empleado_id),
-	constraint fk_empleado_hotel
-		foreign key (hotel_id)
-			references hotel(hote_id)
+CREATE TABLE empleado (
+    empleado_id INT IDENTITY(1,1) NOT NULL,
+    nombres VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    telefono VARCHAR(8) NOT NULL,
+    fecha_nacimiento DATE NOT NULL,
+    hotel_id INT NOT NULL,
+    PRIMARY KEY (empleado_id),
+    CONSTRAINT fk_empleado_hotel
+        FOREIGN KEY (hotel_id)
+            REFERENCES hotel(hotel_id)
 );
 
-insert into empleado (nombres, apellidos, email, telefono, fecha_nacimiento, hotel_id) values ('Julio', 'Jaramillo', 'jjaramillo@gmail.com', '12345678','2025-02-22',1);
-select * from empleado;
+INSERT INTO empleado (nombres, apellidos, email, telefono, fecha_nacimiento, hotel_id) 
+VALUES ('Julio', 'Jaramillo', 'jjaramillo@gmail.com', '12345678', '2025-02-22', 1);
 
--- Tipo HabitaciÛn
-create table tipo_habitacion(
-	tipo_habitacion_id int identity(1,1) not null,
-	tipo varchar(50) not null,
-	descripcion varchar(150),
-	primary key (tipo_habitacion_id)
+SELECT * FROM empleado;
+
+-- Tipo Habitaci√≥n
+CREATE TABLE tipo_habitacion (
+    tipo_habitacion_id INT IDENTITY(1,1) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    descripcion VARCHAR(150),
+    PRIMARY KEY (tipo_habitacion_id)
 );
 
-insert into tipo_habitacion(tipo, descripcion) values('Individual', 'HabitaciÛn espaciosa con 3 cuartos y 2 baÒos completos');
-insert into tipo_habitacion(tipo, descripcion) values('Doble', 'HabitaciÛn espaciosa con 2 cuartos y 1 baÒos completos');
-insert into tipo_habitacion(tipo, descripcion) values('Suite', 'HabitaciÛn espaciosa con 1 cuarto y 2 baÒos completos');
+INSERT INTO tipo_habitacion (tipo, descripcion) 
+VALUES ('Individual', 'Habitaci√≥n espaciosa con 3 cuartos y 2 ba√±os completos');
 
-select * from tipo_habitacion;
+INSERT INTO tipo_habitacion (tipo, descripcion) 
+VALUES ('Doble', 'Habitaci√≥n espaciosa con 2 cuartos y 1 ba√±o completo');
+
+INSERT INTO tipo_habitacion (tipo, descripcion) 
+VALUES ('Suite', 'Habitaci√≥n espaciosa con 1 cuarto y 2 ba√±os completos');
+
+SELECT * FROM tipo_habitacion;
 
 -- Usuario
-create table usuario(
-	usuario_id int identity(1,1) not null,
-	username varchar(25) not null,
-	password varbinary(256) not null,
-	empleado_id int not null,
-	primary key  (usuario_id),
-	constraint fk_usuario_empleado 
-		foreign key (empleado_id) 
-			references empleado(empleado_id) 
+CREATE TABLE usuario (
+    usuario_id INT IDENTITY(1,1) NOT NULL,
+    username VARCHAR(25) NOT NULL,
+    password VARBINARY(256) NOT NULL,
+    empleado_id INT NOT NULL,
+    PRIMARY KEY (usuario_id),
+    CONSTRAINT fk_usuario_empleado 
+        FOREIGN KEY (empleado_id) 
+            REFERENCES empleado(empleado_id) 
 );
 
-insert into usuario(username, password,empleado_id) values ('jjaramillo', HASHBYTES('SHA2_256', 'julio12'), 1);
+INSERT INTO usuario (username, password, empleado_id) 
+VALUES ('jjaramillo', HASHBYTES('SHA2_256', 'julio12'), 1);
 
-select * from usuario;
+SELECT * FROM usuario;
 
--- HabitaciÛn
-create table habitacion(
-	habitacion_id int identity(1,1) not null,
-	disponibilidad varchar(2) not null,
-	constraint chk_disponibilidad CHECK (disponibilidad IN ('SÌ', 'No')),
-	hotel_id int not null,
-	tipo_habitacion_id int not null,
-	tipo_habitacion varchar (50),
-	descripcion varchar(150),
-	primary key (habitacion_id),
-	constraint fk_habitacion_tipo_habitacion
-		foreign key (tipo_habitacion_id)
-			references tipo_habitacion(tipo_habitacion_id),
-	constraint fk_habitacion_hotel
-		foreign key (hotel_id)
-			references hotel(hotel_id)
+-- Habitaci√≥n
+CREATE TABLE habitacion (
+    habitacion_id INT IDENTITY(1,1) NOT NULL,
+    disponibilidad VARCHAR(2) NOT NULL,
+    CONSTRAINT chk_disponibilidad CHECK (disponibilidad IN ('S√≠', 'No')),
+    hotel_id INT NOT NULL,
+    tipo_habitacion_id INT NOT NULL,
+    tipo_habitacion VARCHAR(50),
+    descripcion VARCHAR(150),
+    PRIMARY KEY (habitacion_id),
+    CONSTRAINT fk_habitacion_tipo_habitacion
+        FOREIGN KEY (tipo_habitacion_id)
+            REFERENCES tipo_habitacion(tipo_habitacion_id),
+    CONSTRAINT fk_habitacion_hotel
+        FOREIGN KEY (hotel_id)
+            REFERENCES hotel(hotel_id)
 );
 
-insert into habitacion(disponibilidad, hotel_id, tipo_habitacion_id) values ('SÌ',1,1);
+INSERT INTO habitacion (disponibilidad, hotel_id, tipo_habitacion_id) 
+VALUES ('S√≠', 1, 1);
 
-select * from habitacion;
+SELECT * FROM habitacion;
 
 -- Reservaciones
-create table reservacion_encabezado(
-	reservacion_encabezado_id int identity(1,1) not null,
-	cliente_id int not null,
-	empleado_id int not null,
-	hotel_id int not null,
-	costo decimal(10,2) not null
+CREATE TABLE reservacion_encabezado (
+    reservacion_encabezado_id INT IDENTITY(1,1) NOT NULL,
+    cliente_id INT NOT NULL,
+    empleado_id INT NOT NULL,
+    hotel_id INT NOT NULL,
+    costo DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (reservacion_encabezado_id)
 );
 
-select * from reservacion_encabezado;
-
+SELECT * FROM reservacion_encabezado;
 
 -- Reservaciones Detalle
-create table reservacion_detalle(
-	reservacion_detalle_id int identity(1,1) not null,
-	reservacion_encabezado_id int not null,
-	fecha_inicio date not null,
-	fecha_fin date not null,
-	primary key (reservacion_detalle_id),
-	constraint fk_reservacion_detalle_reservacion_encabezado
-		foreign key (reservacion_encabezado_id)
-			references reservacion_encabezado(reservacion_encabezado_id)
+CREATE TABLE reservacion_detalle (
+    reservacion_detalle_id INT IDENTITY(1,1) NOT NULL,
+    reservacion_encabezado_id INT NOT NULL,
+    fecha_inicio DATE NOT NULL,
+    fecha_fin DATE NOT NULL,
+    PRIMARY KEY (reservacion_detalle_id),
+    CONSTRAINT fk_reservacion_detalle_reservacion_encabezado
+        FOREIGN KEY (reservacion_encabezado_id)
+            REFERENCES reservacion_encabezado(reservacion_encabezado_id)
 );
 
+-- Secci√≥n de funciones tipo "Trigger"
+CREATE TABLE reservacion_habitacion (
+    reservacion_habitacion_id INT IDENTITY(1,1) NOT NULL,
+    reservacion_detalle_id INT NOT NULL,
+    habitacion_id INT NOT NULL,
+    PRIMARY KEY (reservacion_habitacion_id),
+    CONSTRAINT fk_reservacion_habitacion_detalle
+        FOREIGN KEY (reservacion_detalle_id)
+            REFERENCES reservacion_detalle(reservacion_detalle_id),
+    CONSTRAINT fk_reservacion_habitacion_habitacion
+        FOREIGN KEY (habitacion_id)
+            REFERENCES habitacion(habitacion_id)
+);
 
--- SecciÛn de funciones tipo "Trigger"
-
--- Trigger en la tabla habitaciÛn luego de insertar un registro
-create trigger trigger_habitacion_after_insert
-on habitacion
-after insert
-as
-begin
-		update a
-		set a.tipo_habitacion = b.tipo, a.descripcion = b.descripcion
-		from habitacion a
-		inner join tipo_habitacion b on b.tipo_habitacion_id = a.tipo_habitacion_id
-		inner join inserted i ON i.habitacion_id = a.habitacion_id -- "inserted" para aplicar solo en las nuevos registros, de lo contrario, actualiza todos los registros de la tabla
-end;
-
-
+-- Trigger en la tabla habitaci√≥n luego de insertar un registro
+CREATE TRIGGER trigger_habitacion_after_insert
+ON habitacion
+AFTER INSERT
+AS
+BEGIN
+    UPDATE a
+    SET a.tipo_habitacion = b.tipo, 
+        a.descripcion = b.descripcion
+    FROM habitacion a
+    INNER JOIN tipo_habitacion b ON b.tipo_habitacion_id = a.tipo_habitacion_id
+    INNER JOIN inserted i ON i.habitacion_id = a.habitacion_id; -- "inserted" para aplicar solo en los nuevos registros
+END;

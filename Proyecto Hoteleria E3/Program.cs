@@ -10,7 +10,8 @@ namespace Proyecto_Hoteleria_E3
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("HOla mundo");
+            Console.WriteLine("Hola mundo");
+            Console.ReadKey();
         }
     }
 }

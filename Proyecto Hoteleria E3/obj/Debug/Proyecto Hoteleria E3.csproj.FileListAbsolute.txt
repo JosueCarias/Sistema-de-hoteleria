@@ -5,3 +5,10 @@ C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.csp
 C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.csproj.CoreCompileInputs.cache
 C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.exe
 C:\Users\sebas\Desktop\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.pdb
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Proyecto Hoteleria E3\bin\Debug\Proyecto Hoteleria E3.exe.config
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Proyecto Hoteleria E3\bin\Debug\Proyecto Hoteleria E3.exe
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Proyecto Hoteleria E3\bin\Debug\Proyecto Hoteleria E3.pdb
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.csproj.AssemblyReference.cache
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.csproj.CoreCompileInputs.cache
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.exe
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Proyecto Hoteleria E3\obj\Debug\Proyecto Hoteleria E3.pdb
