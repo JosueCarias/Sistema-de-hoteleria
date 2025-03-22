@@ -115,4 +115,63 @@ create table reservacion(
 			references hotel(hotel_id)
 );
 
--- Insertar datos de prueba
+
+-- Insertar datos en la tabla hotel
+INSERT INTO hotel (nombre, descripcion, ubicacion) VALUES
+('Hotel Central', 'Hotel de lujo en el centro de la ciudad', 'Ciudad de Guatemala'),
+('Hotel del Lago', 'Hermoso hotel con vista al lago', 'Panajachel'),
+('Hotel de Playa', 'Hotel frente al mar con todas las comodidades', 'Monterrico');
+
+-- Insertar datos en la tabla cliente
+INSERT INTO cliente (cliente_dpi, nombres, apellidos, email, telefono) VALUES
+(1234567890101, 'Juan', 'Pérez', 'juan.perez@email.com', '55512345'),
+(9876543210123, 'Maria', 'Lopez', 'maria.lopez@email.com', '55567890'),
+(4567891230456, 'Carlos', 'Ramirez', 'carlos.ramirez@email.com', '55534567');
+
+-- Insertar datos en la tabla rol
+INSERT INTO rol (tipo_rol) VALUES
+('Recepcionista'),
+('Gerente'),
+('Limpieza');
+
+-- Insertar datos en la tabla empleado
+INSERT INTO empleado (nombres, apellidos, email, telefono, fecha_nacimiento, hotel_id) VALUES
+('Ana', 'Gonzalez', 'ana.gonzalez@email.com', '55511111', '1990-05-10', 1),
+('Luis', 'Martinez', 'luis.martinez@email.com', '55522222', '1985-08-20', 2),
+('Sofia', 'Hernandez', 'sofia.hernandez@email.com', '55533333', '1992-11-15', 3);
+
+-- Insertar datos en la tabla tipo_habitacion
+INSERT INTO tipo_habitacion (tipo, descripcion) VALUES
+('Sencilla', 'Habitación con una cama individual'),
+('Doble', 'Habitación con dos camas'),
+('Suite', 'Habitación de lujo con sala y jacuzzi');
+
+-- Insertar datos en la tabla usuario
+INSERT INTO usuario (username, password, empleado_id, rol_id) VALUES
+('ana_admin', '123456', 1, 2),
+('luis_recep', '654321', 2, 1),
+('sofia_limpieza', 'limpieza123', 3, 3);
+
+-- Insertar datos en la tabla habitacion
+INSERT INTO habitacion (disponibilidad, hotel_id, tipo_habitacion_id) VALUES
+('Sí', 1, 1),
+('No', 1, 2),
+('Sí', 2, 3),
+('No', 3, 1),
+('Sí', 3, 2);
+
+-- Insertar datos en la tabla reservacion
+INSERT INTO reservacion (cliente_dpi, empleado_id, hotel_id, fecha_inicio, fecha_fin, costo) VALUES
+(1234567890101, 1, 1, '2025-04-01', '2025-04-05', 500.00),
+(9876543210123, 2, 2, '2025-05-10', '2025-05-15', 800.00),
+(4567891230456, 3, 3, '2025-06-20', '2025-06-25', 1200.00);
+
+
+SELECT * FROM hotel;
+SELECT * FROM cliente;
+SELECT * FROM rol;
+SELECT * FROM empleado;
+SELECT * FROM tipo_habitacion;
+SELECT * FROM usuario;
+SELECT * FROM habitacion;
+SELECT * FROM reservacion;
