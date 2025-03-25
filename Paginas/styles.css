@@ -1,0 +1,389 @@
+/* Global Styles */
+body {
+    background-color: #c38a4c;
+    font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header Styles */
+header {
+    background-color: #c34e4c; /* Color de fondo del encabezado */
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Navigation Menu Styles */
+nav ul {
+    list-style-type: none; /* Elimina los estilos de lista */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin-right: 20px; /* Espaciado entre elementos de la navegación */
+}
+
+nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: #ffcc00; /* Cambio de color al pasar el cursor */
+    text-decoration: underline;
+}
+
+nav ul li a.active {
+    color: #ffcc00;
+    text-decoration: underline;
+}
+
+/* Gallery Section */
+.gallery {
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.gallery h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.image-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.image-container {
+    position: relative;
+    width: 300px;
+    overflow: hidden;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+}
+
+.image-container img {
+    width: 100%;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+/* Image Overlay Effect */
+.overlay {
+    position: absolute;
+    bottom: -100%;
+    left: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    text-align: center;
+    padding: 10px;
+    transition: bottom 0.3s ease;
+}
+
+.image-container:hover .overlay {
+    bottom: 0;
+}
+
+.image-container:hover img {
+    transform: scale(1.1);
+}
+
+/* Footer Styles */
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    width: 100%;
+    margin-top: auto;
+    position: sticky;
+    bottom: 0;
+}
+
+.footer-links {
+    margin-top: 15px;
+}
+
+.footer-links a {
+    color: #ccc;
+    text-decoration: none;
+    margin: 0 10px;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+/* Responsive Design for Small Screens */
+@media (max-width: 768px) {
+    .login-box {
+        padding: 30px 20px;
+    }
+    .auth-container {
+        min-height: calc(100vh - 150px);
+    }
+    .password-options {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+/* Form Styles */
+.form-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.form-wrapper {
+    width: 100%;
+    max-width: 500px;
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+}
+
+.form-container h2 {
+    text-align: center;
+    color: #c34e4c;
+}
+
+.form-group label {
+    color: #555;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.form-group input {
+    padding: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #c34e4c;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(195, 78, 76, 0.2);
+}
+
+.submit-btn {
+    padding: 14px;
+    background-color: #c34e4c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #a93a38;
+}
+
+/* Login Container Styles */
+.login-container, 
+.form-container {
+    width: 100%;
+    max-width: 500px; /* Mismo ancho para ambos */
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    margin: 20px auto; /* Centrado horizontal */
+}
+
+.login-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+}
+.login-container h2 {
+    text-align: center;
+    color: #c34e4c;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.forgot-password {
+    color: #c34e4c;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+/* Registration Link Styles */
+.register-link {
+    text-align: center;
+    width: 100%;
+    margin-top: 15px; /* Ajusta el margen para mejor alineación */
+}
+
+.register-prompt {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.register-link {
+    color: #c34e4c;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.register-link:hover {
+    text-decoration: underline;
+}
+
+.register-link a {
+    color: #c34e4c;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.register-link a:hover {
+    color: #a93a38;
+    text-decoration: underline;
+}
+
+/* Contenedor principal para formularios */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 250px); /* Reducido para subir el contenido */
+    padding: 20px 20px 40px; /* Se ajusta el padding */
+}
+
+.auth-form h2 {
+    color: #c34e4c;
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 28px;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.login-box {
+    width: 100%;
+    max-width: 400px;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: -30px; /* Mueve el cuadro hacia arriba */
+}
+
+.login-box h2 {
+    color: #c34e4c;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+}
+
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box; /* Para que no sobresalga */
+}
+
+.password-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #c34e4c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 15px;
+}
+
+.submit-btn:hover {
+    background-color: #a93a38;
+}
+
+.register-link {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.register-link a {
+    color: #c34e4c;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+    color: #a93a38;
+}
