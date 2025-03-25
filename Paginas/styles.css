@@ -1,8 +1,16 @@
 body {
     background-color: #c38a4c;
     font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     margin: 0;
     padding: 0;
+}
+
+main {
+    flex: 1; 
+    padding-bottom: 60px;
 }
 
 header {
@@ -38,9 +46,8 @@ nav ul li a:hover {
     text-decoration: underline;
 }
 
-/* Estilos para las secciones */
 .gallery {
-    margin-bottom: 40px; /* Espacio entre secciones */
+    margin-bottom: 40px; 
     text-align: center;
 }
 
@@ -53,13 +60,13 @@ nav ul li a:hover {
 .image-row {
     display: flex;
     justify-content: center;
-    gap: 20px; /* Espacio entre las imágenes */
-    flex-wrap: wrap; /* Asegura que las imágenes se ajusten en pantallas pequeñas */
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .image-container {
     position: relative;
-    width: 300px; /* Ancho de cada imagen */
+    width: 300px; 
     overflow: hidden;
     border: 2px solid #ccc;
     border-radius: 10px;
@@ -73,7 +80,7 @@ nav ul li a:hover {
 
 .overlay {
     position: absolute;
-    bottom: -100%; /* Inicialmente oculto */
+    bottom: -100%; 
     left: 0;
     width: 100%;
     background-color: rgba(0, 0, 0, 0.7);
@@ -84,11 +91,11 @@ nav ul li a:hover {
 }
 
 .image-container:hover .overlay {
-    bottom: 0; /* Muestra la descripción */
+    bottom: 0; 
 }
 
 .image-container:hover img {
-    transform: scale(1.1); /* Efecto de zoom */
+    transform: scale(1.1); 
 }
 
 footer {
@@ -96,19 +103,139 @@ footer {
     color: white;
     text-align: center;
     padding: 10px;
+    width: 100%;
+    height: 40px; 
+    position: fixed;
+    bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .form-container,
+    .login-container {
+        max-width: 90%;  /* Ocupará el 90% del ancho en móviles */
+        margin: 20px auto;
+        padding: 20px;
+    }
+}
+
+.form-container {
+    max-width: 600px;  
+    margin: 30px auto;
+    padding: 30px;  
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15); 
+}
+
+.form-container h2 {
+    text-align: center;
+    color: #c34e4c;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 10px;
+    background-color: #c34e4c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+    background-color: #a93a38;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #333;
+    color: white;
     position: fixed;
     bottom: 0;
     width: 100%;
 }
 
-/* Responsividad */
-@media (max-width: 768px) {
-    .image-row {
-        flex-direction: column;
-        align-items: center;
-    }
+.login-container {
+    max-width: 500px;  
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+}
 
-    .image-container {
-        width: 90%; /* Ajusta el ancho en móviles */
-    }
+.login-container h2 {
+    text-align: center;
+    color: #c34e4c;
+    margin-bottom: 25px;
+    font-size: 28px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #c34e4c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.submit-btn:hover {
+    background-color: #a93a38;
+}
+
+.forgot-password {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.forgot-password a {
+    color: #c34e4c;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s;
+}
+
+.forgot-password a:hover {
+    color: #a93a38;
+    text-decoration: underline;
+}
+
+/* Asegurar espacio para el footer */
+main {
+    padding-bottom: 80px;
 }

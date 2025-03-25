@@ -11,7 +11,7 @@
         <h1>Autohotel Chocolate</h1>
         <nav>
             <ul>
-                <li><a href="Index.html">Inicio</a></li>
+                <li><a href="index.html">Inicio</a></li>
                 <li><a href="habitaciones.html">Habitaciones</a></li>
                 <li><a href="hoteles.html">Hoteles</a></li>
                 <li><a href="#Reservaciones">Reservaciones</a></li>
@@ -21,30 +21,25 @@
             </ul>
         </nav>
     </header>
-    <!--Habitaciones-->>
-    <section class="gallery">
-        <h2>Hoteles</h2>
-        <div class="image-row">
-            <div class="image-container">
-                <img src="Imagenes/imagen1.jpg" alt="Hotel 1">
-                <div class="overlay">
-                    <p>Hotel Central</p>
-                </div>
+
+    <main class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <form action="#" method="POST">
+            <div class="form-group">
+                <label for="email">Correo electrónico:</label>
+                <input type="email" id="email" name="email" required placeholder="ejemplo@correo.com">
             </div>
-            <div class="image-container">
-                <img src="Imagenes/imagen2.jpg" alt="Hotel 2">
-                <div class="overlay">
-                    <p>Hotel del Lago</p>
-                </div>
+            <div class="form-group">
+                <label for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
             </div>
-            <div class="image-container">
-                <img src="Imagenes/imagen3.jpg" alt="Hotel 3">
-                <div class="overlay">
-                    <p>Hotel de Playa</p>
-                </div>
+            <button type="submit" class="submit-btn">Ingresar</button>
+            <div class="forgot-password">
+                <a href="recuperar.html">¿Olvidaste tu contraseña?</a>
             </div>
-        </div>
-    </section>
+        </form>
+    </main>
+
     <footer>
         <p>&copy; 2025 Sistema de Hotelería. Todos los derechos reservados.</p>
     </footer>
