@@ -1,0 +1,17 @@
+dotnet new webapi -n hoteleria
+
+cd hoteleria
+
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer
+
+dotnet add package Microsoft.EntityFrameworkCore.Design
+
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+
+
+poner en el archivo appsetings.json
+{
+  "ConnectionStrings": {
+    "HoteleriaConnection": "Server=.;Database=hoteleriaGrupo3;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
