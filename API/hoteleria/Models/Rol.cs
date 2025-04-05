@@ -17,7 +17,7 @@ namespace hoteleria.Models
         [StringLength(50)]
         public string TipoRol { get; set; } = string.Empty;
 
-        // Propiedad de navegación
+        [InverseProperty("Rol")]
         public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
     }
 }

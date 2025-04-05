@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\josue\\Desktop\\Pruebas web\\hoteleria\\hoteleria.csproj": {}
+    "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj": {}
   },
   "projects": {
-    "C:\\Users\\josue\\Desktop\\Pruebas web\\hoteleria\\hoteleria.csproj": {
+    "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\josue\\Desktop\\Pruebas web\\hoteleria\\hoteleria.csproj",
+        "projectUniqueName": "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
         "projectName": "hoteleria",
-        "projectPath": "C:\\Users\\josue\\Desktop\\Pruebas web\\hoteleria\\hoteleria.csproj",
+        "projectPath": "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
         "packagesPath": "C:\\Users\\josue\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\josue\\Desktop\\Pruebas web\\hoteleria\\obj\\",
+        "outputPath": "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\josue\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -44,6 +44,14 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.JsonPatch": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.3, )"

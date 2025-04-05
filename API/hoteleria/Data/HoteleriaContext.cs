@@ -58,5 +58,10 @@ public class HoteleriaContext : DbContext
             .HasOne(r => r.Hotel)
             .WithMany()
             .HasForeignKey(r => r.HotelId);
+        modelBuilder.Entity<Usuario>().ToTable("usuario");
+        modelBuilder.Entity<Usuario>()
+        .HasOne(u => u.Rol)
+        .WithMany(r => r.Usuarios)
+        .HasForeignKey(u => u.RolId);
     }
 }
