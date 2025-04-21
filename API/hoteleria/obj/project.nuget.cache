@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "C2rtaQCdPsE=",
+  "dgSpecHash": "tO1EJJP9jhk=",
   "success": true,
-  "projectFilePath": "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
+  "projectFilePath": "D:\\Mariano\\Tercer Semestre\\Programacion 1\\Proyecto final\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\josue\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\josue\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
