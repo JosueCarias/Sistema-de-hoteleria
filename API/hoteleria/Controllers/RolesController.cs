@@ -43,6 +43,7 @@ namespace hoteleria.Controllers
             return CreatedAtAction(nameof(GetRol), new { id = rol.RolId }, rol);
         }
 
+
         // GET: api/roles/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Rol>> GetRol(int id)
@@ -62,7 +63,7 @@ namespace hoteleria.Controllers
         public async Task<IActionResult> DeleteRol(int id)
         {
             try
-            {
+            {     
                 var rol = await _context.Roles
                     .AsNoTracking()
                     .Include(r => r.Usuarios)
@@ -76,29 +77,37 @@ namespace hoteleria.Controllers
                 if (rol.Usuarios?.Any() == true)
                 {
                     return BadRequest(new 
-                    {
-                        Message = "No se puede eliminar el rol porque tiene usuarios asignados",
-                        Usuarios = rol.Usuarios.Select(u => new { u.UsuarioId, u.Username })
-                    });
-                }
-
-                var rolToDelete = new Rol { RolId = id };
-                _context.Roles.Attach(rolToDelete);
-                _context.Roles.Remove(rolToDelete);
-            
-                await _context.SaveChangesAsync();
-
-                return NoContent();
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(500, new 
                 {
-                    Message = "Error al eliminar el rol",
-                    Error = ex.InnerException?.Message
+                    Message = "No se puede eliminar el rol porque tiene usuarios asignados",
+                    Usuarios = rol.Usuarios.Select(u => new { u.UsuarioId, u.Username })
                 });
             }
+
+            // Elimina el rol por ID sin necesidad de cargar toda la entidad
+            var rolToDelete = new Rol { RolId = id };
+            _context.Roles.Attach(rolToDelete);
+            _context.Roles.Remove(rolToDelete);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
         }
+        catch (DbUpdateException ex)
+        {
+            return StatusCode(500, new 
+            {
+                Message = "Error al eliminar el rol (relaciones u otros problemas de base de datos)",
+                Error = ex.InnerException?.Message ?? ex.Message
+            });
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new 
+            {
+                Message = "Error inesperado al eliminar el rol",
+                Error = ex.Message
+            });
+        }
+    }
 
         // GET: api/roles
         [HttpGet]

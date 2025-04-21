@@ -12,6 +12,17 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hoteleria API", Version = "v1" });
 });
 
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("PermitirTodo", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 builder.Services.AddDbContext<HoteleriaContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("HoteleriaConnection")));
 
@@ -22,6 +33,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Usar CORS
+app.UseCors("PermitirTodo");
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

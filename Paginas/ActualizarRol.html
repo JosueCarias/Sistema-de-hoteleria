@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Actualizar Rol - Autohotel Chocolate</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="habitaciones.html">Habitaciones</a></li>
+                <li><a href="hoteles.html">Hotel</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+                <li><a href="inicio.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+        <nav>
+            <ul>
+                <li><a href="VerRoles.html">Ver Roles</a></li>
+                <li><a href="VerRolesId.html">Ver Rol</a></li>
+                <li><a href="ActualizarRol.html">Actualizar Rol</a></li>
+                <li><a href="EliminarRol.html">Eliminar Rol</a></li>
+                <li><a href="CrearRoles.html">Crear Rol</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-wrapper">
+            <form id="actualizarRolForm" class="auth-form">
+                <h2>Actualizar Rol</h2>
+                <div class="form-group">
+                    <label for="idRol">Id Rol</label>
+                    <input type="number" id="rolIdActualizar" placeholder="ID del rol" required>
+                    <label for="nuevoTipoRol">Nuevo tipo de rol</label>
+                    <input type="text" id="nuevoTipoRol" placeholder="Nuevo tipo de rol" required>
+                    <button type="submit" class="submit-btn">Actualizar</button>
+                </div>
+            </form>
+            <p id="actualizarRolResultado"></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
+        <div class="footer-links">
+            <a href="#">Términos y condiciones</a>
+            <a href="#">Política de privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('actualizarRolForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const id = document.getElementById('rolIdActualizar').value;
+            const tipoRol = document.getElementById('nuevoTipoRol').value;
+        
+            const response = await fetch(`http://localhost:5118/api/roles/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ tipoRol })
+            });
+        
+            const resultado = document.getElementById('actualizarRolResultado');
+            const data = await response.json();
+        
+            if (response.ok) {
+                resultado.textContent = data.message;
+                resultado.style.color = 'green';
+            } else {
+                resultado.textContent = data.message || 'Error al actualizar el rol';
+                resultado.style.color = 'red';
+            }
+        });
+    </script>
+</body>
+</html>

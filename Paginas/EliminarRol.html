@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Eliminar Rol - Autohotel Chocolate</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="habitaciones.html">Habitaciones</a></li>
+                <li><a href="hoteles.html">Hotel</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+                <li><a href="inicio.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+        <nav>
+            <ul>
+                <li><a href="VerRoles.html">Ver Roles</a></li>
+                <li><a href="VerRolesId.html">Ver Rol</a></li>
+                <li><a href="ActualizarRol.html">Actualizar Rol</a></li>
+                <li><a href="EliminarRol.html">Eliminar Rol</a></li>
+                <li><a href="CrearRoles.html">Crear Rol</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-wrapper">
+            <form id="eliminarRolForm" class="auth-form">
+                <h2>Eliminar Rol</h2>
+                <div class="form-group">
+                    <label for="idRol">Id Rol</label>
+                    <input type="number" id="rolIdEliminar" placeholder="ID del rol" required>
+                    <button type="submit" class="submit-btn">Eliminar</button>
+                </div>
+            </form>
+            <p id="eliminarRolResultado"></p>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
+        <div class="footer-links">
+            <a href="#">Términos y condiciones</a>
+            <a href="#">Política de privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('eliminarRolForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const id = document.getElementById('rolIdEliminar').value;
+
+                const response = await fetch(`http://localhost:5118/api/roles/${id}`, {
+                    method: 'DELETE'
+                });
+
+                const resultado = document.getElementById('eliminarRolResultado');
+                if (response.status === 204) {
+                    resultado.textContent = 'Rol eliminado correctamente';
+                    resultado.style.color = 'green';
+                } else {
+                    const error = await response.json();
+                    resultado.textContent = error.message || 'Error al eliminar el rol';
+                    resultado.style.color = 'red';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

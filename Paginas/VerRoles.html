@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ver Rol - Autohotel Chocolate</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul>
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="habitaciones.html">Habitaciones</a></li>
+                <li><a href="hoteles.html">Hotel</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+                <li><a href="inicio.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+        <nav>
+            <ul>
+                <li><a href="VerRoles.html">Ver Roles</a></li>
+                <li><a href="VerRolesId.html">Ver Rol</a></li>
+                <li><a href="ActualizarRol.html">Actualizar Rol</a></li>
+                <li><a href="EliminarRol.html">Eliminar Rol</a></li>
+                <li><a href="CrearRoles.html">Crear Rol</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-wrapper">
+            <div class="auth-form">    
+                <h2>Lista de Roles</h2>
+                <button type="button" onclick="obtenerRoles()" class="submit-btn">Cargar Roles</button>
+                <ul id="listaRoles"></ul>
+                <p id="rolMessage" class="message"></p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
+        <div class="footer-links">
+            <a href="#">Términos y condiciones</a>
+            <a href="#">Política de privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+
+    <script>
+        async function obtenerRoles() {
+            const lista = document.getElementById('listaRoles');
+            const message = document.getElementById('rolMessage');
+            
+            lista.innerHTML = '<li>Cargando roles...</li>';
+            message.textContent = '';
+            
+            try {
+                const response = await fetch('http://localhost:5118/api/roles');
+                
+                if (response.ok) {
+                    const roles = await response.json();
+                    lista.innerHTML = '';
+                    
+                    if (roles.length === 0) {
+                        lista.innerHTML = '<li>No hay roles disponibles</li>';
+                    } else {
+                        roles.forEach(rol => {
+                            const li = document.createElement('li');
+                            li.textContent = `ID: ${rol.rolId}, Tipo: ${rol.tipoRol}`;
+                            lista.appendChild(li);
+                        });
+                    }
+                } else {
+                    throw new Error('Error en la respuesta del servidor');
+                }
+            } catch (error) {
+                lista.innerHTML = '';
+                message.textContent = 'Error al cargar los roles: ' + error.message;
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
