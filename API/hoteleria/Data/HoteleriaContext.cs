@@ -18,50 +18,6 @@ public class HoteleriaContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        // Configuración de relaciones
-        modelBuilder.Entity<Empleado>()
-            .HasOne(e => e.Hotel)
-            .WithMany(h => h.Empleados)
-            .HasForeignKey(e => e.HotelId);
-            
-        modelBuilder.Entity<Usuario>()
-            .HasOne(u => u.Empleado)
-            .WithOne(e => e.Usuario)
-            .HasForeignKey<Usuario>(u => u.EmpleadoId);
-            
-        modelBuilder.Entity<Usuario>()
-            .HasOne(u => u.Rol)
-            .WithMany(r => r.Usuarios)
-            .HasForeignKey(u => u.RolId);
-            
-        modelBuilder.Entity<Habitacion>()
-            .HasOne(h => h.Hotel)
-            .WithMany(h => h.Habitaciones)
-            .HasForeignKey(h => h.HotelId);
-            
-        modelBuilder.Entity<Habitacion>()
-            .HasOne(h => h.TipoHabitacion)
-            .WithMany(th => th.Habitaciones)
-            .HasForeignKey(h => h.TipoHabitacionId);
-            
-        modelBuilder.Entity<Reservacion>()
-            .HasOne(r => r.Cliente)
-            .WithMany(c => c.Reservaciones)
-            .HasForeignKey(r => r.ClienteDpi);
-            
-        modelBuilder.Entity<Reservacion>()
-            .HasOne(r => r.Empleado)
-            .WithMany(e => e.Reservaciones)
-            .HasForeignKey(r => r.EmpleadoId);
-            
-        modelBuilder.Entity<Reservacion>()
-            .HasOne(r => r.Hotel)
-            .WithMany()
-            .HasForeignKey(r => r.HotelId);
-        modelBuilder.Entity<Usuario>().ToTable("usuario");
-        modelBuilder.Entity<Usuario>()
-        .HasOne(u => u.Rol)
-        .WithMany(r => r.Usuarios)
-        .HasForeignKey(u => u.RolId);
+          
     }
 }

@@ -1,43 +1,32 @@
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using hoteleria.Data;
 using hoteleria.Models;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
-namespace hoteleria.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class ClientesController : ControllerBase
+namespace hoteleria.Controllers
 {
-    private readonly HoteleriaContext _context;
-
-    public ClientesController(HoteleriaContext context)
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ClientesController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly HoteleriaContext _context;
 
-    // GET: api/clientes
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Cliente>>> GetClientes()
-    {
-        return await _context.Clientes.ToListAsync();
-    }
+        public ClientesController(HoteleriaContext context)
+        {
+            _context = context;
+        }
 
-    // GET: api/clientes/1234567890101
-    [HttpGet("{dpi}")]
-    public async Task<ActionResult<Cliente>> GetCliente(long dpi)
-    {
-        var cliente = await _context.Clientes.FindAsync(dpi);
-        if (cliente == null) return NotFound();
-        return cliente;
-    }
+        [HttpGet("test")]
+        public ActionResult Test()
+        {
+            return Ok("El endpoint funciona - " + DateTime.Now);
+        }
 
-    // POST: api/clientes
-    [HttpPost]
-    public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
-    {
-        _context.Clientes.Add(cliente);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetCliente), new { dpi = cliente.ClienteDpi }, cliente);
-    }
+        private bool RolExists(int id)
+        {
+            return _context.Roles.Any(e => e.RolId == id);
+        }
+    }    
 }

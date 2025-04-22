@@ -153,55 +153,7 @@ namespace hoteleria.Controllers
                     Error = ex.InnerException?.Message
                 });
             }
-        }
-
-        // PATCH: api/roles/5
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> PatchRol(int id, 
-            [FromBody] Microsoft.AspNetCore.JsonPatch.JsonPatchDocument<Rol> patchDoc)
-        {
-            if (patchDoc == null)
-            {
-                return BadRequest("El documento PATCH no puede ser nulo");
-            }
-
-            var rol = await _context.Roles.FindAsync(id);
-            if (rol == null)
-            {
-                return NotFound();
-            }
-
-            patchDoc.ApplyTo(rol, ModelState);
-
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok(rol);
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                if (!RolExists(id))
-                {
-                    return NotFound();
-                }
-                return StatusCode(500, new {
-                    Message = "Error de concurrencia al actualizar el rol",
-                    Error = ex.Message
-                });
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(500, new {
-                    Message = "Error al actualizar el rol",
-                    Error = ex.InnerException?.Message
-                });
-            }
-        }       
+        }      
 
         [HttpGet("test")]
         public ActionResult Test()
