@@ -508,3 +508,4 @@ D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\AP
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.pdb
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.genruntimeconfig.cache
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\ref\hoteleria.dll
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
