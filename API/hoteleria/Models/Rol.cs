@@ -15,9 +15,6 @@ namespace hoteleria.Models
         [Required]
         [Column("tipo_rol")]
         [StringLength(50)]
-        public string TipoRol { get; set; } = string.Empty;
-
-        [InverseProperty("Rol")]
-        public virtual ICollection<Usuario> Usuarios { get; set; } = new List<Usuario>();
+        public string TipoRol { get; set; } = null!;
     }
 }

@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
-using hoteleria.Data;
-using hoteleria.Models;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using hoteleria.Models;    // Asegúrate de que Rol esté aquí
+using hoteleria.Data;  
 
 namespace hoteleria.Controllers
 {
@@ -18,31 +18,12 @@ namespace hoteleria.Controllers
             _context = context;
         }
 
-        // POST: api/roles
-        [HttpPost]
-        public async Task<ActionResult<Rol>> PostRol([FromBody] RolCreateDto rolDto)
+        // GET: api/roles
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Rol>>> GetAllRoles()
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (await _context.Roles.AnyAsync(r => r.TipoRol == rolDto.TipoRol))
-            {
-                return Conflict($"Ya existe un rol con el nombre '{rolDto.TipoRol}'");
-            }
-
-            var rol = new Rol
-            {
-                TipoRol = rolDto.TipoRol
-            };
-
-            _context.Roles.Add(rol);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetRol), new { id = rol.RolId }, rol);
+            return await _context.Roles.ToListAsync();
         }
-
 
         // GET: api/roles/5
         [HttpGet("{id}")]
@@ -58,62 +39,26 @@ namespace hoteleria.Controllers
             return rol;
         }
 
-        // DELETE: api/roles/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRol(int id)
+        // POST: api/roles
+        [HttpPost]
+        public async Task<ActionResult<Rol>> PostRol([FromBody] RolCreateDto rolDto)
         {
-            try
-            {     
-                var rol = await _context.Roles
-                    .AsNoTracking()
-                    .Include(r => r.Usuarios)
-                    .FirstOrDefaultAsync(r => r.RolId == id);
-
-                if (rol == null)
-                {
-                    return NotFound(new { Message = $"Rol con ID {id} no encontrado" });
-                }
-
-                if (rol.Usuarios?.Any() == true)
-                {
-                    return BadRequest(new 
-                {
-                    Message = "No se puede eliminar el rol porque tiene usuarios asignados",
-                    Usuarios = rol.Usuarios.Select(u => new { u.UsuarioId, u.Username })
-                });
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
             }
 
-            // Elimina el rol por ID sin necesidad de cargar toda la entidad
-            var rolToDelete = new Rol { RolId = id };
-            _context.Roles.Attach(rolToDelete);
-            _context.Roles.Remove(rolToDelete);
+            // Validar duplicados
+            if (await _context.Roles.AnyAsync(r => r.TipoRol == rolDto.TipoRol))
+            {
+                return Conflict($"Ya existe un rol con el nombre '{rolDto.TipoRol}'");
+            }
+
+            var rol = new Rol { TipoRol = rolDto.TipoRol };
+            _context.Roles.Add(rol);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-        catch (DbUpdateException ex)
-        {
-            return StatusCode(500, new 
-            {
-                Message = "Error al eliminar el rol (relaciones u otros problemas de base de datos)",
-                Error = ex.InnerException?.Message ?? ex.Message
-            });
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, new 
-            {
-                Message = "Error inesperado al eliminar el rol",
-                Error = ex.Message
-            });
-        }
-    }
-
-        // GET: api/roles
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Rol>>> GetAllRoles()
-        {
-            return await _context.Roles.ToListAsync();
+            return CreatedAtAction(nameof(GetRol), new { id = rol.RolId }, rol);
         }
 
         // PUT: api/roles/5
@@ -128,45 +73,46 @@ namespace hoteleria.Controllers
             var rol = await _context.Roles.FindAsync(id);
             if (rol == null)
             {
-                return NotFound(new { Message = $"No se encontró el rol con ID {id}" });
+                return NotFound($"No se encontró el rol con ID {id}");
             }
 
+            // Validar duplicados (excepto el mismo registro)
             if (await _context.Roles.AnyAsync(r => r.TipoRol == rolDto.TipoRol && r.RolId != id))
             {
-                return Conflict(new { Message = $"Ya existe un rol con el nombre '{rolDto.TipoRol}'" });
+                return Conflict($"Ya existe un rol con el nombre '{rolDto.TipoRol}'");
             }
 
             rol.TipoRol = rolDto.TipoRol;
+            await _context.SaveChangesAsync();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok(new { 
-                    Message = "Rol actualizado correctamente",
-                    Rol = rol
-                });
-            }
-            catch (DbUpdateException ex)
-            {
-                return StatusCode(500, new {
-                    Message = "Error al actualizar el rol en la base de datos",
-                    Error = ex.InnerException?.Message
-                });
-            }
-        }      
+            return Ok(rol);
+        }
 
+        // DELETE: api/roles/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteRol(int id)
+        {
+            var rol = await _context.Roles.FindAsync(id);
+            if (rol == null)
+            {
+                return NotFound($"No se encontró el rol con ID {id}");
+            }
+
+            _context.Roles.Remove(rol);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // Endpoint de prueba
         [HttpGet("test")]
         public ActionResult Test()
         {
             return Ok("El endpoint funciona - " + DateTime.Now);
         }
-
-        private bool RolExists(int id)
-        {
-            return _context.Roles.Any(e => e.RolId == id);
-        }
     }
 
+    // DTOs (Data Transfer Objects)
     public class RolCreateDto
     {
         [Required(ErrorMessage = "El tipo de rol es obligatorio")]

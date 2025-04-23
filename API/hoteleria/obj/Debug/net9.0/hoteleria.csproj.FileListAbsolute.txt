@@ -335,6 +335,7 @@ C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\refin
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.pdb
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.genruntimeconfig.cache
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\ref\hoteleria.dll
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\appsettings.Development.json
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\appsettings.json
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\hoteleria.staticwebassets.endpoints.json
@@ -508,4 +509,3 @@ D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\AP
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.pdb
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.genruntimeconfig.cache
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\ref\hoteleria.dll
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
