@@ -6,35 +6,41 @@ using System.ComponentModel.DataAnnotations;
 
 namespace hoteleria.Controllers
 {
-    [Route("api/[controller]")]  // Define la ruta base como 'api/hoteles'
-    [ApiController]  // Indica que es un controlador de API
+    // Define la ruta base para todos los endpoints del controlador
+    [Route("api/[controller]")]
+    // Indica que este es un controlador de API con comportamientos predeterminados
+    [ApiController]
     public class HotelesController : ControllerBase
     {
-        private readonly HoteleriaContext _context;  // InyecciÛn de dependencia del contexto
+        // Contexto de base de datos para acceder a la tabla hotel
+        private readonly HoteleriaContext _context;
 
+        // Constructor que recibe el contexto por inyecci√≥n de dependencias
         public HotelesController(HoteleriaContext context)
         {
-            _context = context;  // Asigna el contexto inyectado
+            _context = context;
         }
 
         // POST: api/hoteles
-        // Crea un nuevo hotel en la base de datos
+        // Crea un nuevo registro en la tabla hotel
         [HttpPost]
         public async Task<ActionResult<Hotel>> CrearHotel([FromBody] HotelCreateDto hotelDto)
         {
-            // Valida el modelo recibido
+            // Valida que los datos recibidos cumplan con las reglas definidas en el DTO
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState);  // Devuelve errores de validaciÛn
+                // Devuelve error 400 con los detalles de validaci√≥n fallidos
+                return BadRequest(ModelState);
             }
 
-            // Verifica si ya existe un hotel con el mismo nombre
+            // Verifica si ya existe un hotel con el mismo nombre (evita duplicados)
             if (await _context.Hoteles.AnyAsync(h => h.Nombre == hotelDto.Nombre))
             {
+                // Devuelve error 409 si encuentra un duplicado
                 return Conflict($"Ya existe un hotel con el nombre '{hotelDto.Nombre}'");
             }
 
-            // Crea el nuevo objeto Hotel a partir del DTO
+            // Crea un nuevo objeto Hotel a partir de los datos recibidos
             var hotel = new Hotel
             {
                 Nombre = hotelDto.Nombre,
@@ -42,85 +48,55 @@ namespace hoteleria.Controllers
                 Ubicacion = hotelDto.Ubicacion
             };
 
-            // Agrega y guarda en la base de datos
-            _context.Hoteles.Add(hotel);
-            await _context.SaveChangesAsync();
-
-            // Devuelve respuesta 201 (Created) con la ubicaciÛn del nuevo recurso
-            return CreatedAtAction(nameof(ObtenerHotelPorId), new { id = hotel.HotelId }, hotel);
-        }
-
-        // GET: api/hoteles/5
-        // Obtiene un hotel especÌfico por su ID
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Hotel>> ObtenerHotelPorId(int id)
-        {
-            // Busca el hotel en la base de datos
-            var hotel = await _context.Hoteles.FindAsync(id);
-
-            // Si no se encuentra, devuelve 404
-            if (hotel == null)
-            {
-                return NotFound($"No se encontrÛ el hotel con ID {id}");
-            }
-
-            return hotel;  // Devuelve el hotel encontrado
-        }
-
-        // DELETE: api/hoteles/5
-        // Elimina un hotel por su ID
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> EliminarHotel(int id)
-        {
             try
             {
-                // Busca el hotel incluyendo sus habitaciones relacionadas
-                var hotel = await _context.Hoteles
-                    .Include(h => h.Habitaciones)
-                    .FirstOrDefaultAsync(h => h.HotelId == id);
-
-                if (hotel == null)
-                {
-                    return NotFound(new { Message = $"Hotel con ID {id} no encontrado" });
-                }
-
-                // Verifica si el hotel tiene habitaciones asignadas
-                if (hotel.Habitaciones?.Any() == true)
-                {
-                    return BadRequest(new
-                    {
-                        Message = "No se puede eliminar el hotel porque tiene habitaciones asignadas",
-                        Habitaciones = hotel.Habitaciones.Select(h => h.HabitacionId)
-                    });
-                }
-
-                // Elimina el hotel
-                _context.Hoteles.Remove(hotel);
+                // Agrega el nuevo hotel al contexto y guarda cambios
+                _context.Hoteles.Add(hotel);
                 await _context.SaveChangesAsync();
 
-                return NoContent();  // Respuesta 204 (No Content) para operaciones exitosas
+                // Devuelve c√≥digo 201 (Created) con la ubicaci√≥n del nuevo recurso
+                return CreatedAtAction(nameof(ObtenerHotelPorId), new { id = hotel.HotelId }, hotel);
             }
             catch (DbUpdateException ex)
             {
-                // Maneja errores de base de datos
+                // Maneja errores espec√≠ficos de la base de datos
                 return StatusCode(500, new
                 {
-                    Message = "Error al eliminar el hotel",
+                    Message = "Error al guardar el hotel en la base de datos",
                     Error = ex.InnerException?.Message ?? ex.Message
                 });
             }
         }
 
+        // GET: api/hoteles/5
+        // Obtiene un hotel espec√≠fico por su ID (hotel_id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Hotel>> ObtenerHotelPorId(int id)
+        {
+            // Busca el hotel usando su ID (clave primaria)
+            var hotel = await _context.Hoteles.FindAsync(id);
+
+            // Si no encuentra el hotel, devuelve 404
+            if (hotel == null)
+            {
+                return NotFound($"No se encontr√≥ el hotel con ID {id}");
+            }
+
+            // Devuelve el hotel encontrado (c√≥digo 200 impl√≠cito)
+            return hotel;
+        }
+
         // GET: api/hoteles
-        // Obtiene todos los hoteles registrados
+        // Obtiene todos los registros de la tabla hotel
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Hotel>>> ObtenerTodosHoteles()
         {
-            return await _context.Hoteles.ToListAsync();  // Devuelve lista completa de hoteles
+            // Retorna lista completa de hoteles
+            return await _context.Hoteles.ToListAsync();
         }
 
         // PUT: api/hoteles/5
-        // Actualiza un hotel existente
+        // Actualiza un registro existente en la tabla hotel
         [HttpPut("{id}")]
         public async Task<IActionResult> ActualizarHotel(int id, [FromBody] HotelUpdateDto hotelDto)
         {
@@ -134,13 +110,13 @@ namespace hoteleria.Controllers
             var hotel = await _context.Hoteles.FindAsync(id);
             if (hotel == null)
             {
-                return NotFound(new { Message = $"No se encontrÛ el hotel con ID {id}" });
+                return NotFound($"No se encontr√≥ el hotel con ID {id}");
             }
 
-            // Verifica si el nuevo nombre ya existe en otro hotel
+            // Verifica que el nuevo nombre no exista en otro hotel
             if (await _context.Hoteles.AnyAsync(h => h.Nombre == hotelDto.Nombre && h.HotelId != id))
             {
-                return Conflict(new { Message = $"Ya existe un hotel con el nombre '{hotelDto.Nombre}'" });
+                return Conflict($"Ya existe un hotel con el nombre '{hotelDto.Nombre}'");
             }
 
             // Actualiza las propiedades del hotel
@@ -150,62 +126,116 @@ namespace hoteleria.Controllers
 
             try
             {
-                // Guarda los cambios
+                // Guarda los cambios en la base de datos
                 await _context.SaveChangesAsync();
-                return Ok(hotel);  // Devuelve el hotel actualizado
+                // Devuelve el hotel actualizado
+                return Ok(hotel);
             }
             catch (DbUpdateException ex)
             {
-                // Maneja errores de base de datos
+                // Maneja errores de actualizaci√≥n
                 return StatusCode(500, new
                 {
                     Message = "Error al actualizar el hotel en la base de datos",
-                    Error = ex.InnerException?.Message
+                    Error = ex.InnerException?.Message ?? ex.Message
+                });
+            }
+        }
+
+        // DELETE: api/hoteles/5
+        // Elimina un registro de la tabla hotel
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> EliminarHotel(int id)
+        {
+            // Busca el hotel incluyendo sus habitaciones relacionadas
+            var hotel = await _context.Hoteles
+                .Include(h => h.Habitaciones)
+                .FirstOrDefaultAsync(h => h.HotelId == id);
+
+            if (hotel == null)
+            {
+                return NotFound($"Hotel con ID {id} no encontrado");
+            }
+
+            // Verifica que el hotel no tenga habitaciones asignadas
+            if (hotel.Habitaciones.Any())
+            {
+                return BadRequest(new
+                {
+                    Message = "No se puede eliminar el hotel porque tiene habitaciones asignadas",
+                    Habitaciones = hotel.Habitaciones.Select(h => h.HabitacionId)
+                });
+            }
+
+            try
+            {
+                // Elimina el hotel y guarda cambios
+                _context.Hoteles.Remove(hotel);
+                await _context.SaveChangesAsync();
+                // Devuelve c√≥digo 204 (No Content) para operaci√≥n exitosa
+                return NoContent();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Maneja errores de eliminaci√≥n
+                return StatusCode(500, new
+                {
+                    Message = "Error al eliminar el hotel",
+                    Error = ex.InnerException?.Message ?? ex.Message
                 });
             }
         }
 
         // GET: api/hoteles/test
-        // Endpoint de prueba para verificar que el controlador funciona
+        // Endpoint simple para probar que el controlador est√° funcionando
         [HttpGet("test")]
         public ActionResult ProbarEndpoint()
         {
             return Ok(new
             {
                 Estado = "Funcionando",
-                Controlador = "Hoteles",
-                Fecha = DateTime.Now
+                Mensaje = "El servicio de hoteles est√° operativo",
+                Fecha = DateTime.Now,
+                Tabla = "hotel",
+                Campos = new
+                {
+                    hotel_id = "int (PK, identity)",
+                    nombre = "varchar(50) not null",
+                    descripcion = "varchar(150) null",
+                    ubicacion = "varchar(150) not null"
+                }
             });
         }
     }
 
-    // DTO para creaciÛn de hoteles
+    // Modelo DTO para creaci√≥n de hoteles
+    // (Data Transfer Object - Objeto para transferencia de datos)
     public class HotelCreateDto
     {
-        [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(50, ErrorMessage = "El nombre no puede exceder los 50 caracteres")]
+        [Required(ErrorMessage = "El campo nombre es obligatorio")]
+        [StringLength(50, ErrorMessage = "El nombre no puede tener m√°s de 50 caracteres")]
         public string Nombre { get; set; }
 
-        [StringLength(150, ErrorMessage = "La descripciÛn no puede exceder los 150 caracteres")]
+        [StringLength(150, ErrorMessage = "La descripci√≥n no puede exceder 150 caracteres")]
         public string Descripcion { get; set; }
 
-        [Required(ErrorMessage = "La ubicaciÛn es obligatoria")]
-        [StringLength(150, ErrorMessage = "La ubicaciÛn no puede exceder los 150 caracteres")]
+        [Required(ErrorMessage = "La ubicaci√≥n es requerida")]
+        [StringLength(150, ErrorMessage = "La ubicaci√≥n no puede superar 150 caracteres")]
         public string Ubicacion { get; set; }
     }
 
-    // DTO para actualizaciÛn de hoteles
+    // Modelo DTO para actualizaci√≥n de hoteles
     public class HotelUpdateDto
     {
         [Required(ErrorMessage = "El nombre es obligatorio")]
-        [StringLength(50, ErrorMessage = "El nombre no puede exceder los 50 caracteres")]
+        [StringLength(50, ErrorMessage = "Longitud m√°xima de nombre: 50 caracteres")]
         public string Nombre { get; set; }
 
-        [StringLength(150, ErrorMessage = "La descripciÛn no puede exceder los 150 caracteres")]
+        [StringLength(150, ErrorMessage = "Descripci√≥n m√°xima: 150 caracteres")]
         public string Descripcion { get; set; }
 
-        [Required(ErrorMessage = "La ubicaciÛn es obligatoria")]
-        [StringLength(150, ErrorMessage = "La ubicaciÛn no puede exceder los 150 caracteres")]
+        [Required(ErrorMessage = "Debe especificar una ubicaci√≥n")]
+        [StringLength(150, ErrorMessage = "Ubicaci√≥n no mayor a 150 caracteres")]
         public string Ubicacion { get; set; }
     }
 }
