@@ -336,6 +336,14 @@ C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hotel
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.genruntimeconfig.cache
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\ref\hoteleria.dll
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.AssemblyReference.cache
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.GeneratedMSBuildEditorConfig.editorconfig
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfoInputs.cache
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfo.cs
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.CoreCompileInputs.cache
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cs
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cache
+D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.sourcelink.json
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\appsettings.Development.json
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\appsettings.json
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\hoteleria.staticwebassets.endpoints.json
@@ -485,14 +493,6 @@ D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\AP
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.AssemblyReference.cache
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.GeneratedMSBuildEditorConfig.editorconfig
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfoInputs.cache
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfo.cs
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.CoreCompileInputs.cache
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cs
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cache
-D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.sourcelink.json
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\scopedcss\bundle\hoteleria.styles.css
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.build.json
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.development.json

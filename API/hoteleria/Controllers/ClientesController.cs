@@ -16,6 +16,12 @@ namespace hoteleria.Controllers
         {
             _context = context;
         }
+        // Endpoint de prueba
+        [HttpGet("test")]
+        public ActionResult Test()
+        {
+            return Ok("El endpoint funciona - " + DateTime.Now);
+        }
 
         // GET: api/clientes
         [HttpGet]

@@ -9,6 +9,7 @@ public class HoteleriaContext : DbContext
     
     public DbSet<Cliente> Clientes { get; set; }
     public DbSet<Rol> Roles { get; set; }
+    public DbSet<Reservacion> Reservaciones { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
