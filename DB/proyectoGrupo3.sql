@@ -53,7 +53,7 @@ create table empleado(
             references hotel(hotel_id)
 );
 
--- Tipo Habitación
+-- Tipo Habitaciï¿½n
 create table tipo_habitacion(
     tipo_habitacion_id int identity(1,1) not null,
     tipo varchar(50) not null,
@@ -65,7 +65,7 @@ create table tipo_habitacion(
 create table usuario(
     usuario_id int identity(1,1) not null,
     username varchar(25) not null,
-    --password varbinary(64) not null,  -- Se cambió a 64 para SHA-256
+    --password varbinary(64) not null,  -- Se cambiï¿½ a 64 para SHA-256
 	password varchar(50) not null,
     empleado_id int not null,
 	rol_id int not null,
@@ -78,11 +78,11 @@ create table usuario(
             references rol(rol_id)
 );
 
--- Habitación
+-- Habitaciï¿½n
 create table habitacion(
     habitacion_id int identity(1,1) not null,
     disponibilidad varchar(2) not null,
-    constraint chk_disponibilidad CHECK (disponibilidad IN ('Sí', 'No')),
+    constraint chk_disponibilidad CHECK (disponibilidad IN ('Sï¿½', 'No')),
     hotel_id int not null,
     tipo_habitacion_id int not null,
     primary key (habitacion_id),
@@ -124,7 +124,7 @@ INSERT INTO hotel (nombre, descripcion, ubicacion) VALUES
 
 -- Insertar datos en la tabla cliente
 INSERT INTO cliente (cliente_dpi, nombres, apellidos, email, telefono) VALUES
-(1234567890101, 'Juan', 'Pérez', 'juan.perez@email.com', '55512345'),
+(1234567890101, 'Juan', 'Pï¿½rez', 'juan.perez@email.com', '55512345'),
 (9876543210123, 'Maria', 'Lopez', 'maria.lopez@email.com', '55567890'),
 (4567891230456, 'Carlos', 'Ramirez', 'carlos.ramirez@email.com', '55534567');
 
@@ -142,9 +142,9 @@ INSERT INTO empleado (nombres, apellidos, email, telefono, fecha_nacimiento, hot
 
 -- Insertar datos en la tabla tipo_habitacion
 INSERT INTO tipo_habitacion (tipo, descripcion) VALUES
-('Sencilla', 'Habitación con una cama individual'),
-('Doble', 'Habitación con dos camas'),
-('Suite', 'Habitación de lujo con sala y jacuzzi');
+('Sencilla', 'Habitaciï¿½n con una cama individual'),
+('Doble', 'Habitaciï¿½n con dos camas'),
+('Suite', 'Habitaciï¿½n de lujo con sala y jacuzzi');
 
 -- Insertar datos en la tabla usuario
 INSERT INTO usuario (username, password, empleado_id, rol_id) VALUES
@@ -154,11 +154,11 @@ INSERT INTO usuario (username, password, empleado_id, rol_id) VALUES
 
 -- Insertar datos en la tabla habitacion
 INSERT INTO habitacion (disponibilidad, hotel_id, tipo_habitacion_id) VALUES
-('Sí', 1, 1),
+('Sï¿½', 1, 1),
 ('No', 1, 2),
-('Sí', 2, 3),
+('Sï¿½', 2, 3),
 ('No', 3, 1),
-('Sí', 3, 2);
+('Sï¿½', 3, 2);
 
 -- Insertar datos en la tabla reservacion
 INSERT INTO reservacion (cliente_dpi, empleado_id, hotel_id, fecha_inicio, fecha_fin, costo) VALUES
@@ -166,6 +166,9 @@ INSERT INTO reservacion (cliente_dpi, empleado_id, hotel_id, fecha_inicio, fecha
 (9876543210123, 2, 2, '2025-05-10', '2025-05-15', 800.00),
 (4567891230456, 3, 3, '2025-06-20', '2025-06-25', 1200.00);
 
+ALTER TABLE reservacion DROP CONSTRAINT fk_reservacion_encabezado_cliente;
+ALTER TABLE reservacion DROP CONSTRAINT fk_reservacion_encabezado_empleado;
+ALTER TABLE reservacion DROP CONSTRAINT fk_reservacion_hotel;
 
 SELECT * FROM hotel;
 SELECT * FROM cliente;
@@ -175,3 +178,6 @@ SELECT * FROM tipo_habitacion;
 SELECT * FROM usuario;
 SELECT * FROM habitacion;
 SELECT * FROM reservacion;
+
+
+
