@@ -25,6 +25,5 @@ namespace hoteleria.Models
         [Column("ubicacion")]
         [StringLength(150)]
         public string Ubicacion { get; set; } = string.Empty;
-
     }
 }

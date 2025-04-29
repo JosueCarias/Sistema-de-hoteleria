@@ -5423,11 +5423,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
+      "projectUniqueName": "D:\\Mariano\\Tercer Semestre\\Programacion 1\\Proyecto final\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
       "projectName": "hoteleria",
-      "projectPath": "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
+      "projectPath": "D:\\Mariano\\Tercer Semestre\\Programacion 1\\Proyecto final\\Sistema-de-hoteleria\\API\\hoteleria\\hoteleria.csproj",
       "packagesPath": "C:\\Users\\josue\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\josue\\Desktop\\Sistema-de-hoteleria\\API\\hoteleria\\obj\\",
+      "outputPath": "D:\\Mariano\\Tercer Semestre\\Programacion 1\\Proyecto final\\Sistema-de-hoteleria\\API\\hoteleria\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -5523,7 +5523,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.202/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.203/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
