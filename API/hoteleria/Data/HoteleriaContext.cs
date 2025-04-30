@@ -11,6 +11,8 @@ public class HoteleriaContext : DbContext
     public DbSet<Rol> Roles { get; set; }
     public DbSet<Reservacion> Reservaciones { get; set; }
     public DbSet<Hotel> Hoteles { get; set; }
+
+    public DbSet<TipoHabitacion> TipoHabitaciones { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
