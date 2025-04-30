@@ -337,14 +337,6 @@ D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\AP
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.pdb
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.genruntimeconfig.cache
 D:\Mariano\Tercer Semestre\Programacion 1\Proyecto final\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\ref\hoteleria.dll
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.AssemblyReference.cache
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfoInputs.cache
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfo.cs
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.CoreCompileInputs.cache
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.sourcelink.json
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\appsettings.Development.json
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\appsettings.json
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\hoteleria.staticwebassets.endpoints.json
@@ -492,6 +484,14 @@ C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\runti
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Runtime.Caching.dll
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\bin\Debug\net9.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.AssemblyReference.cache
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfoInputs.cache
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.AssemblyInfo.cs
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.csproj.CoreCompileInputs.cache
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\hoteleria.sourcelink.json
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\scopedcss\bundle\hoteleria.styles.css
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.build.json
 C:\Users\josue\Desktop\Sistema-de-hoteleria\API\hoteleria\obj\Debug\net9.0\staticwebassets.development.json
