@@ -17,6 +17,7 @@ namespace hoteleria.Data
         public DbSet<Hotel> Hoteles { get; set; }
         public DbSet<TipoHabitacion> TipoHabitaciones { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
