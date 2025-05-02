@@ -172,6 +172,7 @@ ALTER TABLE reservacion DROP CONSTRAINT fk_reservacion_hotel;
 ALTER TABLE habitacion DROP CONSTRAINT fk_habitacion_tipo_habitacion;
 ALTER TABLE habitacion DROP CONSTRAINT fk_habitacion_hotel;
 ALTER TABLE habitacion DROP CONSTRAINT chk_disponibilidad;
+ALTER TABLE usuario DROP CONSTRAINT fk_usuario_empleado;
 
 SELECT * FROM hotel;
 SELECT * FROM cliente;
