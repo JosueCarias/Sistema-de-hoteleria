@@ -44,6 +44,17 @@ namespace hoteleria.Controllers
         {
             return Ok("El endpoint funciona - " + DateTime.Now);
         }
+        // GET: api/usuarios
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
+        {
+            var usuarios = await _context.Usuarios.ToListAsync();
+            if (usuarios == null || usuarios.Count == 0)
+            {
+                return NotFound();
+            }
+            return usuarios;
+        }
 
 
         /* Obtener una tupla por medio del ID*/
