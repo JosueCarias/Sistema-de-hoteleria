@@ -169,6 +169,9 @@ INSERT INTO reservacion (cliente_dpi, empleado_id, hotel_id, fecha_inicio, fecha
 ALTER TABLE reservacion DROP CONSTRAINT fk_reservacion_encabezado_cliente;
 ALTER TABLE reservacion DROP CONSTRAINT fk_reservacion_encabezado_empleado;
 ALTER TABLE reservacion DROP CONSTRAINT fk_reservacion_hotel;
+ALTER TABLE habitacion DROP CONSTRAINT fk_habitacion_tipo_habitacion;
+ALTER TABLE habitacion DROP CONSTRAINT fk_habitacion_hotel;
+ALTER TABLE habitacion DROP CONSTRAINT chk_disponibilidad;
 
 SELECT * FROM hotel;
 SELECT * FROM cliente;
