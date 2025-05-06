@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Autohotel Chocolate</title>
+    <title>Registro de Cliente - Autohotel Chocolate</title>
     <link rel="stylesheet" href="../styles.css">
+    <!-- SweetAlert para mensajes -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
     <header>
@@ -14,26 +18,33 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="habitaciones.html">Habitaciones</a></li>
                 <li><a href="hoteles.html">Hotel</a></li>
-                <li><a href="registro.html">Registrarse</a></li>
-                <li><a href="inicio.html" class="active">Iniciar Sesión</a></li>
+                <li><a href="reservacion.html">Reservación</a></li>
+                <li><a href="registro.html" class="active">Registrarse</a></li>
+                <li><a href="inicio.html">Iniciar Sesión</a></li>
             </ul>
         </nav>
     </header>
 
     <main class="form-section">
         <div class="form-wrapper">
-            <form class="auth-form">
-                <h2>Crear Cuenta</h2>
+            <form id="registroForm" class="auth-form">
+                <h2>Registro de Cliente</h2>
+                
+                <div class="form-group">
+                    <label for="dpi">DPI (Documento Personal de Identificación)</label>
+                    <input type="number" id="dpi" required min="1000000000000" max="9999999999999">
+                    <small class="form-text">13 dígitos sin guiones</small>
+                </div>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nombre">Nombre</label>
-                        <input type="text" id="nombre" required>
+                        <label for="nombres">Nombres</label>
+                        <input type="text" id="nombres" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="apellido">Apellido</label>
-                        <input type="text" id="apellido" required>
+                        <label for="apellidos">Apellidos</label>
+                        <input type="text" id="apellidos" required>
                     </div>
                 </div>
                 
@@ -44,12 +55,7 @@
                 
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Contraseña</label>
-                    <input type="password" id="password" required>
+                    <input type="tel" id="telefono" required>
                 </div>
                 
                 <button type="submit" class="submit-btn">Registrarse</button>
@@ -61,7 +67,6 @@
         </div>
     </main>
 
-    
     <footer>
         <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
         <div class="footer-links">
@@ -70,5 +75,85 @@
             <a href="#">Contacto</a>
         </div>
     </footer>
+
+    <script>
+        $(document).ready(function() {
+            $('#registroForm').submit(function(e) {
+                e.preventDefault();
+                
+                // Validar DPI (13 dígitos)
+                const dpi = $('#dpi').val();
+                if (dpi.length !== 13) {
+                    Swal.fire('Error', 'El DPI debe tener exactamente 13 dígitos', 'error');
+                    return;
+                }
+
+                // Crear objeto con los datos del formulario
+                const clienteData = {
+                    ClienteDPI: dpi,
+                    Nombres: $('#nombres').val(),
+                    Apellidos: $('#apellidos').val(),
+                    Email: $('#email').val(),
+                    Telefono: $('#telefono').val()
+                };
+
+                // Enviar datos al servidor
+                $.ajax({
+                    url: 'http://localhost:5118/api/clientes',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(clienteData),
+                    success: function(response) {
+                        Swal.fire({
+                            title: '¡Registro exitoso!',
+                            text: 'Tu cuenta ha sido creada correctamente',
+                            icon: 'success'
+                        }).then(() => {
+                            // Redirigir al inicio de sesión después del registro
+                            window.location.href = 'inicio.html';
+                        });
+                    },
+                    error: function(xhr) {
+                        if (xhr.status === 409) {
+                            Swal.fire('Error', 'Ya existe un cliente registrado con este DPI', 'error');
+                        } else {
+                            Swal.fire('Error', 'Ocurrió un error al registrar. Por favor intenta nuevamente.', 'error');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        /* Estilos adicionales específicos para este formulario */
+        .form-text {
+            display: block;
+            margin-top: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+        
+        #dpi {
+            letter-spacing: 1px;
+        }
+        
+        .submit-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
 </body>
 </html>

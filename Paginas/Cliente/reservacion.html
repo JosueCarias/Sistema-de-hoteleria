@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservación - Autohotel Chocolate</title>
+    <link rel="stylesheet" href="../styles.css">
+    <!-- Flatpickr para fechas y Select2 para combos -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- SweetAlert y jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Inicio</a></li>
+                <li><a href="../habitaciones.html">Habitaciones</a></li>
+                <li><a href="../hoteles.html">Hotel</a></li>
+                <li><a href="../registro.html">Registrarse</a></li>
+                <li><a href="../inicio.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-wrapper">
+            <form id="reservacionForm" class="auth-form">
+                <h2>Nueva Reservación</h2>
+                
+                <div class="form-group">
+                    <label for="clienteDPI">DPI del Cliente</label>
+                    <input type="number" id="clienteDPI" required min="1000000000000" max="9999999999999">
+                    <small class="form-text">13 dígitos sin guiones</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="hotelId">Hotel</label>
+                    <select id="hotelId" class="form-text" required>
+                        <option value="">Seleccione un hotel</option>
+                        <!-- Opciones se cargarán dinámicamente -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="habitacionId">Habitación</label>
+                    <select id="habitacionId" class="form-text" required disabled>
+                        <option value="">Primero seleccione un hotel</option>
+                    </select>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaInicio">Fecha de Inicio</label>
+                        <input type="text" id="fechaInicio" class="datepicker" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fechaFin">Fecha de Fin</label>
+                        <input type="text" id="fechaFin" class="datepicker" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="costo">Costo ($)</label>
+                    <input type="number" id="costo" step="0.01" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">Reservar</button>
+                
+                <div id="mensajeReservacion" class="message" style="margin-top: 20px;"></div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
+        <div class="footer-links">
+            <a href="#">Términos y condiciones</a>
+            <a href="#">Política de privacidad</a>
+            <a href="#">Contacto</a>
+        </div>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            // Función mejorada para cargar hoteles
+            function cargarHoteles() {
+                $('#hotelId').empty().append('<option value="">Cargando hoteles...</option>');
+                
+                $.ajax({
+                    url: 'http://localhost:5118/api/hoteles',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        const $select = $('#hotelId');
+                        $select.empty().append('<option value="">Seleccione un hotel</option>');
+                        
+                        // Verificar si la respuesta es válida
+                        if (response && Array.isArray(response)) {
+                            if (response.length === 0) {
+                                $select.append('<option value="" disabled>No hay hoteles disponibles</option>');
+                                Swal.fire('Info', 'No se encontraron hoteles registrados', 'info');
+                            } else {
+                                response.forEach(hotel => {
+                                    $select.append(`<option value="${hotel.hotelId}">${hotel.nombre} - ${hotel.ubicacion}</option>`);
+                                });
+                            }
+                        } else {
+                            console.error('Respuesta inesperada:', response);
+                            $select.append('<option value="" disabled>Error al cargar hoteles</option>');
+                            Swal.fire('Error', 'Formato de respuesta inesperado', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al cargar hoteles:', status, error);
+                        $('#hotelId').empty().append('<option value="" disabled>Error al cargar hoteles</option>');
+                        
+                        // Mensaje más descriptivo según el tipo de error
+                        let errorMsg = 'Error al cargar los hoteles';
+                        if (xhr.status === 0) {
+                            errorMsg = 'No se pudo conectar al servidor. Verifique su conexión.';
+                        } else if (xhr.status === 404) {
+                            errorMsg = 'Endpoint no encontrado. Verifique la URL.';
+                        } else if (xhr.status === 500) {
+                            errorMsg = 'Error interno del servidor';
+                        }
+                        
+                        Swal.fire('Error', errorMsg, 'error');
+                    }
+                });
+            }
+            function cargarHabitaciones() {
+                const $select = $('#habitacionId');
+                $select.prop('disabled', true).empty().append('<option value="">Cargando tipos de habitación...</option>');
+
+                $.ajax({
+                    url: 'http://localhost:5118/api/tipohabitaciones',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(response) {
+                        $select.empty().append('<option value="">Seleccione un tipo de habitación</option>');
+                    
+                        if (response && Array.isArray(response)) {
+                            if (response.length === 0) {
+                                $select.append('<option value="" disabled>No hay tipos disponibles</option>');
+                                Swal.fire('Info', 'No se encontraron tipos de habitación', 'info');
+                            } else {
+                                response.forEach(tipo => {
+                                    $select.append(`<option value="${tipo.tipoHabitacionId}">${tipo.tipo} - ${tipo.descripcion}</option>`);
+                                });
+                            }
+                        
+                            $select.prop('disabled', false);
+                        } else {
+                            console.error('Formato inesperado:', response);
+                            $select.append('<option value="" disabled>Error al cargar tipos</option>');
+                            Swal.fire('Error', 'Formato de respuesta inesperado al cargar habitaciones', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error al cargar habitaciones:', status, error);
+                        $select.empty().append('<option value="" disabled>Error al cargar tipos de habitación</option>');
+                        Swal.fire('Error', 'No se pudo cargar la lista de tipos de habitación', 'error');
+                    }
+                });
+            }
+        
+            // Llamar a la función al cargar la página
+            cargarHoteles();
+            $('#hotelId').on('change', function() {
+                const hotelSeleccionado = $(this).val();
+                if (hotelSeleccionado) {
+                    cargarHabitaciones(); // Aquí podrías filtrar por hotel si tu backend lo permite
+                } else {
+                    $('#habitacionId').prop('disabled', true).empty().append('<option value="">Primero seleccione un hotel</option>');
+                }
+            });
+        });
+
+        $('#reservacionForm').on('submit', function(e) {
+    e.preventDefault();
+
+    const reserva = {
+        clienteDPI: $('#clienteDPI').val(),
+        empleadoId: 1, // Puedes poner el ID real del empleado aquí si lo obtienes desde sesión o algún login
+        hotelId: parseInt($('#hotelId').val()),
+        fechaInicio: $('#fechaInicio').val(),
+        fechaFin: $('#fechaFin').val(),
+        costo: parseFloat($('#costo').val())
+    };
+
+    if (!reserva.clienteDPI || !reserva.hotelId || !reserva.fechaInicio || !reserva.fechaFin || !reserva.costo) {
+        Swal.fire('Error', 'Todos los campos son obligatorios', 'warning');
+        return;
+    }
+
+    $.ajax({
+        url: 'http://localhost:5118/api/reservaciones',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(reserva),
+        success: function(response) {
+            Swal.fire('Éxito', 'Reservación registrada correctamente', 'success');
+            $('#reservacionForm')[0].reset();
+            $('#habitacionId').prop('disabled', true).empty().append('<option value="">Primero seleccione un hotel</option>');
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+            Swal.fire('Error', 'No se pudo completar la reservación', 'error');
+        }
+    });
+});
+    </script>
+
+    <style>
+    
+    </style>
+</body>
+</html>

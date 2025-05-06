@@ -150,8 +150,9 @@ INSERT INTO tipo_habitacion (tipo, descripcion) VALUES
 
 -- Insertar datos en la tabla usuario
 INSERT INTO usuario (username, password, empleado_id, rol_id) VALUES
+('root', 'root', 1, 1),
 ('ana_admin', '123456', 1, 2),
-('luis_recep', '654321', 2, 1),
+('luis_recep', '654321', 2, 4),
 ('sofia_limpieza', 'limpieza123', 3, 3);
 
 -- Insertar datos en la tabla habitacion
