@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Reservaciones - Autohotel Chocolate</title>
+    <link rel="stylesheet" href="../styles.css">
+    <!-- DataTables, jQuery, SweetAlert y Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Flatpickr para selección de fechas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul>
+                <li><a href="../Cliente/index.html">Inicio</a></li>
+                <li><a href="../Cliente/habitaciones.html">Habitaciones</a></li>
+                <li><a href="../Cliente/hoteles.html">Hotel</a></li>
+                <li><a href="../Cliente/registro.html">Registrarse</a></li>
+                <li><a href="../Cliente/inicio.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-wrapper">
+            <div class="crud-header">
+                <h2>Gestión de Reservaciones</h2>
+                <button id="btnNuevaReservacion" class="btn-primary">
+                    <i class="fas fa-plus"></i> Nueva Reservación
+                </button>
+            </div>
+            
+            <table id="reservacionesTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente DPI</th>
+                        <th>Empleado ID</th>
+                        <th>Hotel ID</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Costo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para crear/editar reservación -->
+    <div id="reservacionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Nueva Reservación</h2>
+            <form id="reservacionForm">
+                <input type="hidden" id="reservacionId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clienteDPI">Cliente DPI:</label>
+                        <input type="number" id="clienteDPI" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="empleadoId">Empleado ID:</label>
+                        <input type="number" id="empleadoId" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="hotelId">Hotel ID:</label>
+                        <input type="number" id="hotelId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="costo">Costo ($):</label>
+                        <input type="number" id="costo" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaInicio">Fecha Inicio:</label>
+                        <input type="text" id="fechaInicio" class="datepicker" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fechaFin">Fecha Fin:</label>
+                        <input type="text" id="fechaFin" class="datepicker" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            // Configuración de DataTables
+            const tabla = $('#reservacionesTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                responsive: true,
+                ajax: {
+                    url: 'http://localhost:5118/api/reservaciones',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'reservacionId' },
+                    { data: 'clienteDPI' },
+                    { data: 'empleadoId' },
+                    { data: 'hotelId' },
+                    { 
+                        data: 'fechaInicio',
+                        render: function(data) {
+                            return new Date(data).toLocaleDateString('es-ES');
+                        }
+                    },
+                    { 
+                        data: 'fechaFin',
+                        render: function(data) {
+                            return new Date(data).toLocaleDateString('es-ES');
+                        }
+                    },
+                    { 
+                        data: 'costo',
+                        render: function(data) {
+                            return `$${data.toFixed(2)}`;
+                        }
+                    },
+                    { 
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                                <div class="action-buttons">
+                                    <button class="btn-edit" onclick="editarReservacion(${row.reservacionId})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-delete" onclick="eliminarReservacion(${row.reservacionId})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        },
+                        orderable: false
+                    }
+                ]
+            });
+
+            // Configuración de Flatpickr para fechas
+            $(".datepicker").flatpickr({
+                locale: "es",
+                dateFormat: "Y-m-d",
+                minDate: "today"
+            });
+
+            // Elementos del modal
+            const modal = $('#reservacionModal');
+            const btnNuevo = $('#btnNuevaReservacion');
+            const span = $('.close');
+            const btnCancelar = $('#btnCancelar');
+
+            // Abrir modal para nueva reservación
+            btnNuevo.click(function() {
+                $('#modalTitle').text('Nueva Reservación');
+                $('#reservacionForm')[0].reset();
+                $('#reservacionId').val('');
+                modal.css('display', 'block');
+            });
+
+            // Cerrar modal
+            span.click(function() { modal.css('display', 'none'); });
+            btnCancelar.click(function() { modal.css('display', 'none'); });
+
+            // Cerrar modal al hacer clic fuera
+            $(window).click(function(event) {
+                if (event.target == modal[0]) {
+                    modal.css('display', 'none');
+                }
+            });
+
+            // Manejar envío del formulario
+            $('#reservacionForm').submit(function(e) {
+                e.preventDefault();
+                
+                const id = $('#reservacionId').val();
+                const reservacion = {
+                    reservacionId: id ? parseInt(id) : 0,
+                    clienteDPI: $('#clienteDPI').val(),
+                    empleadoId: parseInt($('#empleadoId').val()),
+                    hotelId: parseInt($('#hotelId').val()),
+                    fechaInicio: $('#fechaInicio').val(),
+                    fechaFin: $('#fechaFin').val(),
+                    costo: parseFloat($('#costo').val())
+                };
+
+                // Validación de fechas
+                if (new Date(reservacion.fechaInicio) >= new Date(reservacion.fechaFin)) {
+                    Swal.fire('Error', 'La fecha de inicio debe ser anterior a la fecha de fin', 'error');
+                    return;
+                }
+
+                if (id) {
+                    // Actualizar reservación existente
+                    actualizarReservacion(id, reservacion);
+                } else {
+                    // Crear nueva reservación
+                    crearReservacion(reservacion);
+                }
+            });
+        });
+
+        // Función para editar reservación
+        function editarReservacion(id) {
+            $.ajax({
+                url: `http://localhost:5118/api/reservaciones/${id}`,
+                type: 'GET',
+                success: function(reservacion) {
+                    $('#modalTitle').text('Editar Reservación');
+                    $('#reservacionId').val(reservacion.reservacionId);
+                    $('#clienteDPI').val(reservacion.clienteDPI);
+                    $('#empleadoId').val(reservacion.empleadoId);
+                    $('#hotelId').val(reservacion.hotelId);
+                    $('#fechaInicio').val(reservacion.fechaInicio.split('T')[0]);
+                    $('#fechaFin').val(reservacion.fechaFin.split('T')[0]);
+                    $('#costo').val(reservacion.costo);
+                    $('#reservacionModal').css('display', 'block');
+                },
+                error: function() {
+                    Swal.fire('Error', 'No se pudo cargar la reservación', 'error');
+                }
+            });
+        }
+
+        // Función para crear reservación
+        function crearReservacion(reservacion) {
+            $.ajax({
+                url: 'http://localhost:5118/api/reservaciones',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(reservacion),
+                success: function() {
+                    Swal.fire('Éxito', 'Reservación creada correctamente', 'success');
+                    $('#reservacionModal').css('display', 'none');
+                    $('#reservacionesTable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON || 'Error al crear la reservación';
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Función para actualizar reservación
+        function actualizarReservacion(id, reservacion) {
+            $.ajax({
+                url: `http://localhost:5118/api/reservaciones/${id}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(reservacion),
+                success: function() {
+                    Swal.fire('Éxito', 'Reservación actualizada correctamente', 'success');
+                    $('#reservacionModal').css('display', 'none');
+                    $('#reservacionesTable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON || 'Error al actualizar la reservación';
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Función para eliminar reservación
+        function eliminarReservacion(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarla!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `http://localhost:5118/api/reservaciones/${id}`,
+                        type: 'DELETE',
+                        success: function() {
+                            Swal.fire('Eliminada!', 'La reservación ha sido eliminada.', 'success');
+                            $('#reservacionesTable').DataTable().ajax.reload();
+                        },
+                        error: function() {
+                            Swal.fire('Error', 'Error al eliminar la reservación', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+    <style>
+    </style>
+</body>
+</html>

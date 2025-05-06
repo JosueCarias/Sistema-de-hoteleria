@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Usuarios - Autohotel Chocolate</title>
+    <link rel="stylesheet" href="../styles.css">
+    <!-- DataTables, jQuery, SweetAlert y Font Awesome -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+    <header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul>
+                <li><a href="../Cliente/index.html">Inicio</a></li>
+                <li><a href="../Cliente/habitaciones.html">Habitaciones</a></li>
+                <li><a href="../Cliente/hoteles.html">Hotel</a></li>
+                <li><a href="../Cliente/registro.html">Registrarse</a></li>
+                <li><a href="../Cliente/inicio.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-wrapper">
+            <div class="crud-header">
+                <h2>Gestión de Usuarios</h2>
+                <button id="btnNuevoUsuario" class="btn-primary">
+                    <i class="fas fa-plus"></i> Nuevo Usuario
+                </button>
+            </div>
+            
+            <table id="usuariosTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre de Usuario</th>
+                        <th>Empleado ID</th>
+                        <th>Rol ID</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para crear/editar usuario -->
+    <div id="usuarioModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Nuevo Usuario</h2>
+            <form id="usuarioForm">
+                <input type="hidden" id="usuarioId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Nombre de Usuario:</label>
+                        <input type="text" id="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Contraseña:</label>
+                        <input type="password" id="password" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="empleadoId">Empleado ID:</label>
+                        <input type="number" id="empleadoId" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="rolId">Rol ID:</label>
+                        <input type="number" id="rolId" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        $(document).ready(function() {
+            // Configuración de DataTables
+            const tabla = $('#usuariosTable').DataTable({
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                },
+                responsive: true,
+                ajax: {
+                    url: 'http://localhost:5118/api/usuario',
+                    dataSrc: ''
+                },
+                columns: [
+                    { data: 'usuarioId' },
+                    { data: 'username' },
+                    { data: 'empleadoId' },
+                    { data: 'rolId' },
+                    { 
+                        data: null,
+                        render: function(data, type, row) {
+                            return `
+                                <div class="action-buttons">
+                                    <button class="btn-edit" onclick="editarUsuario(${row.usuarioId})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn-delete" onclick="eliminarUsuario(${row.usuarioId})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            `;
+                        },
+                        orderable: false
+                    }
+                ]
+            });
+
+            // Elementos del modal
+            const modal = $('#usuarioModal');
+            const btnNuevo = $('#btnNuevoUsuario');
+            const span = $('.close');
+            const btnCancelar = $('#btnCancelar');
+
+            // Abrir modal para nuevo usuario
+            btnNuevo.click(function() {
+                $('#modalTitle').text('Nuevo Usuario');
+                $('#usuarioForm')[0].reset();
+                $('#usuarioId').val('');
+                modal.css('display', 'block');
+            });
+
+            // Cerrar modal
+            span.click(function() { modal.css('display', 'none'); });
+            btnCancelar.click(function() { modal.css('display', 'none'); });
+
+            // Cerrar modal al hacer clic fuera
+            $(window).click(function(event) {
+                if (event.target == modal[0]) {
+                    modal.css('display', 'none');
+                }
+            });
+
+            // Manejar envío del formulario
+            $('#usuarioForm').submit(function(e) {
+                e.preventDefault();
+                
+                const id = $('#usuarioId').val();
+                const usuario = {
+                    usuarioId: id ? parseInt(id) : 0,
+                    username: $('#username').val(),
+                    password: $('#password').val(),
+                    empleadoId: parseInt($('#empleadoId').val()),
+                    rolId: parseInt($('#rolId').val())
+                };
+
+                if (id) {
+                    // Actualizar usuario existente
+                    actualizarUsuario(id, usuario);
+                } else {
+                    // Crear nuevo usuario
+                    crearUsuario(usuario);
+                }
+            });
+        });
+
+        // Función para editar usuario
+        function editarUsuario(id) {
+            $.ajax({
+                url: `http://localhost:5118/api/usuario/${id}`,
+                type: 'GET',
+                success: function(usuario) {
+                    $('#modalTitle').text('Editar Usuario');
+                    $('#usuarioId').val(usuario.usuarioId);
+                    $('#username').val(usuario.username);
+                    $('#password').val(''); // Por seguridad no mostramos la contraseña actual
+                    $('#empleadoId').val(usuario.empleadoId);
+                    $('#rolId').val(usuario.rolId);
+                    $('#usuarioModal').css('display', 'block');
+                },
+                error: function() {
+                    Swal.fire('Error', 'No se pudo cargar el usuario', 'error');
+                }
+            });
+        }
+
+        // Función para crear usuario
+        function crearUsuario(usuario) {
+            $.ajax({
+                url: 'http://localhost:5118/api/usuario',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(usuario),
+                success: function() {
+                    Swal.fire('Éxito', 'Usuario creado correctamente', 'success');
+                    $('#usuarioModal').css('display', 'none');
+                    $('#usuariosTable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON || 'Error al crear el usuario';
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Función para actualizar usuario
+        function actualizarUsuario(id, usuario) {
+            $.ajax({
+                url: `http://localhost:5118/api/usuario/${id}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(usuario),
+                success: function() {
+                    Swal.fire('Éxito', 'Usuario actualizado correctamente', 'success');
+                    $('#usuarioModal').css('display', 'none');
+                    $('#usuariosTable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON || 'Error al actualizar el usuario';
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Función para eliminar usuario
+        function eliminarUsuario(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `http://localhost:5118/api/usuario/${id}`,
+                        type: 'DELETE',
+                        success: function() {
+                            Swal.fire('Eliminado!', 'El usuario ha sido eliminado.', 'success');
+                            $('#usuariosTable').DataTable().ajax.reload();
+                        },
+                        error: function() {
+                            Swal.fire('Error', 'Error al eliminar el usuario', 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+    <style>
+    </style>
+</body>
+</html>

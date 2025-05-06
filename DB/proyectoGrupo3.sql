@@ -130,9 +130,11 @@ INSERT INTO cliente (cliente_dpi, nombres, apellidos, email, telefono) VALUES
 
 -- Insertar datos en la tabla rol
 INSERT INTO rol (tipo_rol) VALUES
-('Recepcionista'),
-('Gerente'),
-('Limpieza');
+('Root'),
+('Cliente'),
+('Empleado'),
+('Supervisor'),
+('Administrado');
 
 -- Insertar datos en la tabla empleado
 INSERT INTO empleado (nombres, apellidos, email, telefono, fecha_nacimiento, hotel_id) VALUES

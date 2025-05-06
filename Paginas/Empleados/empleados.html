@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Empleados - Autohotel Chocolate</title>
+    <link rel="stylesheet" href="../styles.css">
+    <!-- DataTables, jQuery, SweetAlert, Font Awesome y Flatpickr -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/es.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul>
+                <li><a href="../Cliente/index.html">Inicio</a></li>
+                <li><a href="../Cliente/habitaciones.html">Habitaciones</a></li>
+                <li><a href="../Cliente/hoteles.html">Hotel</a></li>
+                <li><a href="../Cliente/registro.html">Registrarse</a></li>
+                <li><a href="../Cliente/inicio.html">Iniciar Sesión</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="form-section">
+        <div class="form-wrapper">
+            <div class="crud-header">
+                <h2>Gestión de Empleados</h2>
+                <button id="btnNuevoEmpleado" class="btn-primary">
+                    <i class="fas fa-plus"></i> Nuevo Empleado
+                </button>
+            </div>
+            
+            <table id="empleadosTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombres</th>
+                        <th>Apellidos</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Hotel</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </main>
+
+    <!-- Modal para crear/editar empleado -->
+    <div id="empleadoModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="modalTitle">Nuevo Empleado</h2>
+            <form id="empleadoForm">
+                <input type="hidden" id="empleadoId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombres">Nombres:</label>
+                        <input type="text" id="nombres" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos:</label>
+                        <input type="text" id="apellidos" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="text" id="telefono" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fechaNacimiento">Fecha Nacimiento:</label>
+                        <input type="text" id="fechaNacimiento" class="datepicker" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="hotelId">Hotel ID:</label>
+                        <input type="number" id="hotelId" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Guardar</button>
+                    <button type="button" class="btn-secondary" id="btnCancelar">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 Autohotel Chocolate. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Variable global para almacenar hoteles
+        let hotelesDisponibles = [];
+
+        $(document).ready(function() {
+            // Cargar hoteles primero
+            cargarHoteles().then(() => {
+                // Configuración de DataTables
+                const tabla = $('#empleadosTable').DataTable({
+                    language: {
+                        url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json'
+                    },
+                    responsive: true,
+                    ajax: {
+                        url: 'http://localhost:5118/api/empleados',
+                        dataSrc: ''
+                    },
+                    columns: [
+                        { data: 'empleadoId' },
+                        { data: 'nombres' },
+                        { data: 'apellidos' },
+                        { data: 'email' },
+                        { data: 'telefono' },
+                        { 
+                            data: 'hotel',
+                            render: function(data) {
+                                return data ? data.nombre : 'N/A';
+                            }
+                        },
+                        { 
+                            data: null,
+                            render: function(data, type, row) {
+                                return `
+                                    <div class="action-buttons">
+                                        <button class="btn-edit" onclick="editarEmpleado(${row.empleadoId})">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn-delete" onclick="eliminarEmpleado(${row.empleadoId})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                `;
+                            },
+                            orderable: false
+                        }
+                    ]
+                });
+
+                // Configuración de Flatpickr para fecha de nacimiento
+                $("#fechaNacimiento").flatpickr({
+                    locale: "es",
+                    dateFormat: "Y-m-d",
+                    maxDate: new Date().fp_incr(-18 * 365) // Mínimo 18 años
+                });
+
+                // Elementos del modal
+                const modal = $('#empleadoModal');
+                const btnNuevo = $('#btnNuevoEmpleado');
+                const span = $('.close');
+                const btnCancelar = $('#btnCancelar');
+
+                // Abrir modal para nuevo empleado
+                btnNuevo.click(function() {
+                    $('#modalTitle').text('Nuevo Empleado');
+                    $('#empleadoForm')[0].reset();
+                    $('#empleadoId').val('');
+                    modal.css('display', 'block');
+                });
+
+                // Cerrar modal
+                span.click(function() { modal.css('display', 'none'); });
+                btnCancelar.click(function() { modal.css('display', 'none'); });
+
+                // Cerrar modal al hacer clic fuera
+                $(window).click(function(event) {
+                    if (event.target == modal[0]) {
+                        modal.css('display', 'none');
+                    }
+                });
+
+                // Manejar envío del formulario
+                $('#empleadoForm').submit(function(e) {
+                    e.preventDefault();
+                    
+                    const id = $('#empleadoId').val();
+                    const empleado = {
+                        empleadoId: id ? parseInt(id) : 0,
+                        nombres: $('#nombres').val(),
+                        apellidos: $('#apellidos').val(),
+                        email: $('#email').val(),
+                        telefono: $('#telefono').val(),
+                        fechaNacimiento: $('#fechaNacimiento').val(),
+                        hotelId: parseInt($('#hotelId').val())
+                    };
+
+                    if (id) {
+                        // Actualizar empleado existente
+                        actualizarEmpleado(id, empleado);
+                    } else {
+                        // Crear nuevo empleado
+                        crearEmpleado(empleado);
+                    }
+                });
+            });
+        });
+
+        // Función para cargar hoteles
+        function cargarHoteles() {
+            return $.ajax({
+                url: 'http://localhost:5118/api/hoteles',
+                type: 'GET',
+                success: function(data) {
+                    hotelesDisponibles = data;
+                },
+                error: function() {
+                    console.error('Error al cargar hoteles');
+                }
+            });
+        }
+
+        // Función para editar empleado
+        function editarEmpleado(id) {
+            $.ajax({
+                url: `http://localhost:5118/api/empleados/${id}`,
+                type: 'GET',
+                success: function(empleado) {
+                    $('#modalTitle').text('Editar Empleado');
+                    $('#empleadoId').val(empleado.empleadoId);
+                    $('#nombres').val(empleado.nombres);
+                    $('#apellidos').val(empleado.apellidos);
+                    $('#email').val(empleado.email);
+                    $('#telefono').val(empleado.telefono);
+                    $('#fechaNacimiento').val(empleado.fechaNacimiento.split('T')[0]);
+                    $('#hotelId').val(empleado.hotelId);
+                    $('#empleadoModal').css('display', 'block');
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON || 'No se pudo cargar el empleado';
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Función para crear empleado
+        function crearEmpleado(empleado) {
+            $.ajax({
+                url: 'http://localhost:5118/api/empleados',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(empleado),
+                success: function() {
+                    Swal.fire('Éxito', 'Empleado creado correctamente', 'success');
+                    $('#empleadoModal').css('display', 'none');
+                    $('#empleadosTable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON || 'Error al crear el empleado';
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Función para actualizar empleado
+        function actualizarEmpleado(id, empleado) {
+            $.ajax({
+                url: `http://localhost:5118/api/empleados/${id}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify(empleado),
+                success: function() {
+                    Swal.fire('Éxito', 'Empleado actualizado correctamente', 'success');
+                    $('#empleadoModal').css('display', 'none');
+                    $('#empleadosTable').DataTable().ajax.reload();
+                },
+                error: function(xhr) {
+                    const errorMsg = xhr.responseJSON || 'Error al actualizar el empleado';
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
+
+        // Función para eliminar empleado
+        function eliminarEmpleado(id) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esta acción!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminarlo!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: `http://localhost:5118/api/empleados/${id}`,
+                        type: 'DELETE',
+                        success: function() {
+                            Swal.fire('Eliminado!', 'El empleado ha sido eliminado.', 'success');
+                            $('#empleadosTable').DataTable().ajax.reload();
+                        },
+                        error: function(xhr) {
+                            const errorMsg = xhr.responseJSON || 'Error al eliminar el empleado';
+                            Swal.fire('Error', errorMsg, 'error');
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
