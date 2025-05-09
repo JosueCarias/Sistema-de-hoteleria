@@ -59,5 +59,21 @@
             <a href="#">Contacto</a>
         </div>
     </footer>
+    <script>
+        document.querySelector('.auth-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Aquí puedes agregar la lógica de autenticación
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            // Simulación de autenticación exitosa
+            if (email && password) {
+                // Redirigir a la página de Reservaciones
+                window.location.href = 'reservacion.html';
+            } else {
+                alert('Por favor, ingresa tus credenciales.');
+            }
+        });
+    </script>
 </body>
 </html>
