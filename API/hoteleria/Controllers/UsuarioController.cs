@@ -56,8 +56,6 @@ namespace hoteleria.Controllers
             return usuarios;
         }
 
-
-        /* Obtener una tupla por medio del ID*/
         // GET: api/usuarios/1
         [HttpGet("{id}")]
         // [AutoValidateAntiforgeryToken]
@@ -167,9 +165,35 @@ namespace hoteleria.Controllers
             await _context.SaveChangesAsync();
             return usuario;
         }
+        [HttpPost("login")]
+        public async Task<ActionResult<dynamic>> Login([FromBody] LoginRequest login)
+        {
+            Console.WriteLine($"Intento de login: {login.Username}"); // Depuración
+            
+            var usuario = await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Username == login.Username && u.Password == login.Password);
+        
+            if (usuario == null)
+            {
+                Console.WriteLine("Usuario no encontrado o contraseña incorrecta"); // Depuración
+                return Unauthorized("Usuario o contraseña incorrectos");
+            }
+        
+            Console.WriteLine($"Login exitoso: {usuario.Username}"); // Depuración
+            
+            return new {
+                usuarioId = usuario.UsuarioId,
+                username = usuario.Username,
+                rolId = usuario.RolId
+            };
+        }
 
-
-
+        // Modelo DTO para el login
+        public class LoginRequest
+        {
+            public string Username { get; set; }
+            public string Password { get; set; }
+        }
 
     }
 
