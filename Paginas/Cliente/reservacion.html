@@ -23,7 +23,8 @@
                 <li><a href="index.html">Inicio</a></li>
                 <li><a href="habitaciones.html">Habitaciones</a></li>
                 <li><a href="hoteles.html">Hotel</a></li>
-                <li><a href="registro.html" class="active">Registrarse</a></li>
+                <li><a href="registro.html">Registrarse</a></li>
+                <li><a href="../Cliente/reservacion.html" class="active">Reservación</a></li>
                 <li><a href="inicio.html">Iniciar Sesión</a></li>
             </ul>
         </nav>
@@ -90,7 +91,15 @@
 
     <script>
         $(document).ready(function() {
-            // Función mejorada para cargar hoteles
+            // Inicializar datepickers
+            flatpickr(".datepicker", {
+                dateFormat: "Y-m-d",
+                minDate: "today",
+                locale: "es",
+                allowInput: true
+            });
+        
+            // Función para cargar hoteles
             function cargarHoteles() {
                 $('#hotelId').empty().append('<option value="">Cargando hoteles...</option>');
                 
@@ -102,7 +111,6 @@
                         const $select = $('#hotelId');
                         $select.empty().append('<option value="">Seleccione un hotel</option>');
                         
-                        // Verificar si la respuesta es válida
                         if (response && Array.isArray(response)) {
                             if (response.length === 0) {
                                 $select.append('<option value="" disabled>No hay hoteles disponibles</option>');
@@ -118,30 +126,29 @@
                             Swal.fire('Error', 'Formato de respuesta inesperado', 'error');
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Error al cargar hoteles:', status, error);
-                        $('#hotelId').empty().append('<option value="" disabled>Error al cargar hoteles</option>');
-                        
-                        // Mensaje más descriptivo según el tipo de error
+                    error: function(xhr) {
                         let errorMsg = 'Error al cargar los hoteles';
-                        if (xhr.status === 0) {
-                            errorMsg = 'No se pudo conectar al servidor. Verifique su conexión.';
-                        } else if (xhr.status === 404) {
-                            errorMsg = 'Endpoint no encontrado. Verifique la URL.';
-                        } else if (xhr.status === 500) {
-                            errorMsg = 'Error interno del servidor';
-                        }
+                        if (xhr.status === 0) errorMsg = 'No se pudo conectar al servidor';
+                        else if (xhr.status === 404) errorMsg = 'Servicio no encontrado';
+                        else if (xhr.status === 500) errorMsg = 'Error interno del servidor';
                         
+                        $('#hotelId').empty().append('<option value="" disabled>' + errorMsg + '</option>');
                         Swal.fire('Error', errorMsg, 'error');
                     }
                 });
             }
-            function cargarHabitaciones() {
+        
+            // Función para cargar habitaciones (filtradas por hotel si es posible)
+            function cargarHabitaciones(hotelId) {
                 const $select = $('#habitacionId');
-                $select.prop('disabled', true).empty().append('<option value="">Cargando tipos de habitación...</option>');
-
+                $select.prop('disabled', true).empty().append('<option value="">Cargando habitaciones...</option>');
+            
+                let url = 'http://localhost:5118/api/tipohabitaciones';
+                // Si tu API soporta filtrado por hotel, puedes usar:
+                // let url = `http://localhost:5118/api/tipohabitaciones?hotelId=${hotelId}`;
+            
                 $.ajax({
-                    url: 'http://localhost:5118/api/tipohabitaciones',
+                    url: url,
                     type: 'GET',
                     dataType: 'json',
                     success: function(response) {
@@ -150,73 +157,133 @@
                         if (response && Array.isArray(response)) {
                             if (response.length === 0) {
                                 $select.append('<option value="" disabled>No hay tipos disponibles</option>');
-                                Swal.fire('Info', 'No se encontraron tipos de habitación', 'info');
                             } else {
                                 response.forEach(tipo => {
-                                    $select.append(`<option value="${tipo.tipoHabitacionId}">${tipo.tipo} - ${tipo.descripcion}</option>`);
+                                    $select.append(`<option value="${tipo.tipoHabitacionId}" data-precio="${tipo.precio}">${tipo.tipo} - ${tipo.descripcion}</option>`);
                                 });
                             }
                         
                             $select.prop('disabled', false);
                         } else {
-                            console.error('Formato inesperado:', response);
                             $select.append('<option value="" disabled>Error al cargar tipos</option>');
-                            Swal.fire('Error', 'Formato de respuesta inesperado al cargar habitaciones', 'error');
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Error al cargar habitaciones:', status, error);
-                        $select.empty().append('<option value="" disabled>Error al cargar tipos de habitación</option>');
-                        Swal.fire('Error', 'No se pudo cargar la lista de tipos de habitación', 'error');
+                    error: function(xhr) {
+                        let errorMsg = 'Error al cargar habitaciones';
+                        if (xhr.status === 404) errorMsg = 'Servicio no encontrado';
+                        else if (xhr.status === 500) errorMsg = 'Error interno del servidor';
+                        
+                        $select.empty().append('<option value="" disabled>' + errorMsg + '</option>');
                     }
                 });
             }
         
-            // Llamar a la función al cargar la página
+            // Cargar hoteles al iniciar
             cargarHoteles();
+        
+            // Evento cuando cambia el hotel seleccionado
             $('#hotelId').on('change', function() {
-                const hotelSeleccionado = $(this).val();
-                if (hotelSeleccionado) {
-                    cargarHabitaciones(); // Aquí podrías filtrar por hotel si tu backend lo permite
+                const hotelId = $(this).val();
+                if (hotelId) {
+                    cargarHabitaciones(hotelId);
                 } else {
-                    $('#habitacionId').prop('disabled', true).empty().append('<option value="">Primero seleccione un hotel</option>');
+                    $('#habitacionId').prop('disabled', true)
+                        .empty()
+                        .append('<option value="">Primero seleccione un hotel</option>');
                 }
             });
+        
+            // Evento cuando cambia el tipo de habitación (para auto-calcular costo)
+            $('#habitacionId').on('change', function() {
+                const selectedOption = $(this).find('option:selected');
+                const precio = selectedOption.data('precio');
+                if (precio) {
+                    $('#costo').val(precio.toFixed(2));
+                }
+            });
+        
+            // Evento submit del formulario
+            $('#reservacionForm').on('submit', function(e) {
+                e.preventDefault();
+                const $form = $(this);
+                const $submitBtn = $form.find('button[type="submit"]');
+                
+                // Deshabilitar botón para evitar múltiples submits
+                $submitBtn.prop('disabled', true).text('Procesando...');
+                
+                const reserva = {
+                    clienteDPI: $('#clienteDPI').val().toString().trim(),
+                    empleadoId: 1, // Esto debería venir de la sesión
+                    hotelId: parseInt($('#hotelId').val()),
+                    tipoHabitacionId: parseInt($('#habitacionId').val()),
+                    fechaInicio: $('#fechaInicio').val(),
+                    fechaFin: $('#fechaFin').val(),
+                    costo: parseFloat($('#costo').val())
+                };
+            
+                // Validaciones
+                if (!reserva.clienteDPI || reserva.clienteDPI.length !== 13 || !/^\d+$/.test(reserva.clienteDPI)) {
+                    Swal.fire('Error', 'El DPI debe tener exactamente 13 dígitos numéricos', 'warning');
+                    $submitBtn.prop('disabled', false).text('Reservar');
+                    return;
+                }
+            
+                if (!reserva.hotelId || !reserva.tipoHabitacionId) {
+                    Swal.fire('Error', 'Debe seleccionar un hotel y tipo de habitación', 'warning');
+                    $submitBtn.prop('disabled', false).text('Reservar');
+                    return;
+                }
+            
+                const fechaInicio = new Date(reserva.fechaInicio);
+                const fechaFin = new Date(reserva.fechaFin);
+                if (fechaFin <= fechaInicio) {
+                    Swal.fire('Error', 'La fecha de fin debe ser posterior a la fecha de inicio', 'warning');
+                    $submitBtn.prop('disabled', false).text('Reservar');
+                    return;
+                }
+            
+                if (!reserva.costo || reserva.costo <= 0) {
+                    Swal.fire('Error', 'El costo debe ser un valor positivo', 'warning');
+                    $submitBtn.prop('disabled', false).text('Reservar');
+                    return;
+                }
+            
+                // Enviar la reserva
+                $.ajax({
+                    url: 'http://localhost:5118/api/reservaciones',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(reserva),
+                    success: function(response) {
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: 'Reservación registrada correctamente',
+                            icon: 'success',
+                            willClose: () => {
+                                $form[0].reset();
+                                $('#habitacionId').prop('disabled', true)
+                                    .empty()
+                                    .append('<option value="">Primero seleccione un hotel</option>');
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'No se pudo completar la reservación';
+                        if (xhr.responseJSON) {
+                            if (xhr.responseJSON.message) errorMsg = xhr.responseJSON.message;
+                            if (xhr.status === 400) errorMsg = 'Datos inválidos: ' + (xhr.responseJSON.errors ? Object.values(xhr.responseJSON.errors).join(', ') : errorMsg);
+                            if (xhr.status === 409) errorMsg = 'Conflicto: ' + (xhr.responseJSON.detail || 'La habitación no está disponible en esas fechas');
+                        }
+                        
+                        Swal.fire('Error', errorMsg, 'error');
+                        console.error('Error en reservación:', xhr.status, xhr.responseText);
+                    },
+                    complete: function() {
+                        $submitBtn.prop('disabled', false).text('Reservar');
+                    }
+                });
+            });
         });
-
-        $('#reservacionForm').on('submit', function(e) {
-    e.preventDefault();
-
-    const reserva = {
-        clienteDPI: $('#clienteDPI').val(),
-        empleadoId: 1, // Puedes poner el ID real del empleado aquí si lo obtienes desde sesión o algún login
-        hotelId: parseInt($('#hotelId').val()),
-        fechaInicio: $('#fechaInicio').val(),
-        fechaFin: $('#fechaFin').val(),
-        costo: parseFloat($('#costo').val())
-    };
-
-    if (!reserva.clienteDPI || !reserva.hotelId || !reserva.fechaInicio || !reserva.fechaFin || !reserva.costo) {
-        Swal.fire('Error', 'Todos los campos son obligatorios', 'warning');
-        return;
-    }
-
-    $.ajax({
-        url: 'http://localhost:5118/api/reservaciones',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify(reserva),
-        success: function(response) {
-            Swal.fire('Éxito', 'Reservación registrada correctamente', 'success');
-            $('#reservacionForm')[0].reset();
-            $('#habitacionId').prop('disabled', true).empty().append('<option value="">Primero seleccione un hotel</option>');
-        },
-        error: function(xhr) {
-            console.error(xhr.responseText);
-            Swal.fire('Error', 'No se pudo completar la reservación', 'error');
-        }
-    });
-});
     </script>
 
     <style>
