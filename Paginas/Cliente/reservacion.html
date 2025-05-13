@@ -14,6 +14,7 @@
     <!-- SweetAlert y jQuery -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
     <header>
@@ -98,45 +99,66 @@
                 locale: "es",
                 allowInput: true
             });
+
+        function generarPDF(reserva) {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(16);
+            doc.text("Autohotel Chocolate - Confirmación de Reservación", 10, 20);
+
+            doc.setFontSize(12);
+            doc.text(`DPI del Cliente: ${reserva.clienteDPI}`, 10, 40);
+            doc.text(`Hotel ID: ${reserva.hotelId}`, 10, 50);
+            doc.text(`Tipo de Habitación ID: ${reserva.tipoHabitacionId}`, 10, 60);
+            doc.text(`Fecha de Inicio: ${reserva.fechaInicio}`, 10, 70);
+            doc.text(`Fecha de Fin: ${reserva.fechaFin}`, 10, 80);
+            doc.text(`Costo Total: $${reserva.costo.toFixed(2)}`, 10, 90);
+
+            doc.setFontSize(10);
+            doc.text("Gracias por reservar con nosotros. ¡Esperamos su visita!", 10, 110);
+
+            doc.save(`Reservacion_${reserva.clienteDPI}.pdf`);
+        }    
         
-            // Función para cargar hoteles
-            function cargarHoteles() {
-                $('#hotelId').empty().append('<option value="">Cargando hoteles...</option>');
-                
-                $.ajax({
-                    url: 'http://localhost:5118/api/hoteles',
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function(response) {
-                        const $select = $('#hotelId');
-                        $select.empty().append('<option value="">Seleccione un hotel</option>');
-                        
-                        if (response && Array.isArray(response)) {
-                            if (response.length === 0) {
-                                $select.append('<option value="" disabled>No hay hoteles disponibles</option>');
-                                Swal.fire('Info', 'No se encontraron hoteles registrados', 'info');
-                            } else {
-                                response.forEach(hotel => {
-                                    $select.append(`<option value="${hotel.hotelId}">${hotel.nombre} - ${hotel.ubicacion}</option>`);
-                                });
-                            }
+        // Función para cargar hoteles
+        function cargarHoteles() {
+            $('#hotelId').empty().append('<option value="">Cargando hoteles...</option>');
+            
+            $.ajax({
+                url: 'http://localhost:5118/api/hoteles',
+                type: 'GET',
+                dataType: 'json',
+                success: function(response) {
+                    const $select = $('#hotelId');
+                    $select.empty().append('<option value="">Seleccione un hotel</option>');
+                    
+                    if (response && Array.isArray(response)) {
+                        if (response.length === 0) {
+                            $select.append('<option value="" disabled>No hay hoteles disponibles</option>');
+                            Swal.fire('Info', 'No se encontraron hoteles registrados', 'info');
                         } else {
-                            console.error('Respuesta inesperada:', response);
-                            $select.append('<option value="" disabled>Error al cargar hoteles</option>');
-                            Swal.fire('Error', 'Formato de respuesta inesperado', 'error');
+                            response.forEach(hotel => {
+                                $select.append(`<option value="${hotel.hotelId}">${hotel.nombre} - ${hotel.ubicacion}</option>`);
+                            });
                         }
-                    },
-                    error: function(xhr) {
-                        let errorMsg = 'Error al cargar los hoteles';
-                        if (xhr.status === 0) errorMsg = 'No se pudo conectar al servidor';
-                        else if (xhr.status === 404) errorMsg = 'Servicio no encontrado';
-                        else if (xhr.status === 500) errorMsg = 'Error interno del servidor';
-                        
-                        $('#hotelId').empty().append('<option value="" disabled>' + errorMsg + '</option>');
-                        Swal.fire('Error', errorMsg, 'error');
+                    } else {
+                        console.error('Respuesta inesperada:', response);
+                        $select.append('<option value="" disabled>Error al cargar hoteles</option>');
+                        Swal.fire('Error', 'Formato de respuesta inesperado', 'error');
                     }
-                });
-            }
+                },
+                error: function(xhr) {
+                    let errorMsg = 'Error al cargar los hoteles';
+                    if (xhr.status === 0) errorMsg = 'No se pudo conectar al servidor';
+                    else if (xhr.status === 404) errorMsg = 'Servicio no encontrado';
+                    else if (xhr.status === 500) errorMsg = 'Error interno del servidor';
+                    
+                    $('#hotelId').empty().append('<option value="" disabled>' + errorMsg + '</option>');
+                    Swal.fire('Error', errorMsg, 'error');
+                }
+            });
+        }
         
             // Función para cargar habitaciones (filtradas por hotel si es posible)
             function cargarHabitaciones(hotelId) {
@@ -261,6 +283,7 @@
                             icon: 'success',
                             willClose: () => {
                                 $form[0].reset();
+                                generarPDF(reserva);
                                 $('#habitacionId').prop('disabled', true)
                                     .empty()
                                     .append('<option value="">Primero seleccione un hotel</option>');
