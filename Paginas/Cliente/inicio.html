@@ -5,37 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Autohotel Chocolate</title>
     <link rel="stylesheet" href="../styles.css">
+    <style>
+        /* Estilos para ocultar/mostrar elementos según rol */
+        .guest-only, .auth-only, 
+        .cliente-only, .empleado-only, 
+        .supervisor-only, .admin-only, 
+        .root-only {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <header>
-    <h1>Autohotel Chocolate</h1>
-    <nav>
-        <ul id="menu">
-            <li><a href="index.html">Inicio</a></li>
-            <li><a href="habitaciones.html">Habitaciones</a></li>
-            <li><a href="hoteles.html">Hotel</a></li>
-            <li><a href="registro.html">Registrarse</a></li>
-            
-            <!-- Solo para invitados -->
-            <li class="guest-only"><a href="registro.html">Registrarse</a></li>
-            <li class="guest-only"><a href="inicio.html" class="active">Iniciar Sesión</a></li>
-            
-            <!-- Solo para clientes -->
-            <li class="cliente-only"><a href="../Cliente/reservacion.html">Reservación</a></li>
-            <li class="cliente-only"><a href="../Cliente/misreservas.html">Mis Reservas</a></li>
-            
-            <!-- Solo para administradores -->
-            <li class="admin-only"><a href="admin/usuarios.html">Gestión de Usuarios</a></li>
-            <li class="admin-only"><a href="admin/habitaciones.html">Gestión de Habitaciones</a></li>
-            
-            <!-- Solo para usuarios autenticados -->
-            <li class="auth-only"><a href="#" onclick="cerrarSesion()">Cerrar Sesión</a></li>
-            
-            <!-- Saludo al usuario -->
-            <li class="auth-only" id="user-greeting"></li>
-        </ul>
-    </nav>
-</header>
+        <h1>Autohotel Chocolate</h1>
+        <nav>
+            <ul id="menu">
+                <li><a href="index.html">Inicio</a></li>
+                <li><a href="habitaciones.html">Habitaciones</a></li>
+                <li><a href="hoteles.html">Hotel</a></li>
+                
+                <!-- Solo para invitados -->
+                <li class="guest-only"><a href="registro.html">Registrarse</a></li>
+                <li class="guest-only"><a href="inicio.html" class="active">Iniciar Sesión</a></li>
+                
+                <!-- Solo para clientes -->
+                <li class="cliente-only"><a href="../Cliente/reservacion.html">Reservación</a></li>
+                
+                <!-- Solo para empleados -->
+                <li class="empleado-only"><a href="../Clientes/clientes.html">Clientes</a></li>
+                <li class="empleado-only"><a href="../Habitaciones/habitaciones.html">Habitaciones</a></li>
+                <li class="empleado-only"><a href="../Reservacion/reservacion.html">Reservaciones</a></li>
+                
+                <!-- Solo para supervisores -->
+                <li class="supervisor-only"><a href="../Empleados/empleados.html">Empleados</a></li>
+                <li class="supervisor-only"><a href="../Hoteles/hoteles.html">Hoteles</a></li>
+                <li class="supervisor-only"><a href="../TipoHabitacion/tipohabitacion.html">Tipo Habitacion</a></li>
+                
+                <!-- Solo para administradores -->
+                <li class="admin-only"><a href="../Usuario/Usuarios.html">Usuarios</a></li>
+                <li class="admin-only"><a href="../Roles/roles.html">Roles</a></li>
+                
+                <!-- Solo para root (acceso completo) -->
+                
+                
+                <!-- Solo para usuarios autenticados -->
+                <li class="auth-only"><a href="#" onclick="cerrarSesion()">Cerrar Sesión</a></li>
+                
+                <!-- Saludo al usuario -->
+                <li class="auth-only" id="user-greeting"></li>
+            </ul>
+        </nav>
+    </header>
 
     <main class="form-section">
         <div class="form-wrapper">
@@ -79,42 +99,64 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-    const rol = localStorage.getItem("rol");
-    const username = localStorage.getItem("username");
-    
-    // Elementos del menú
-    const authItems = document.querySelectorAll(".auth-only");
-    const guestItems = document.querySelectorAll(".guest-only");
-    const adminItems = document.querySelectorAll(".admin-only");
-    const clienteItems = document.querySelectorAll(".cliente-only");
-    const userGreeting = document.getElementById("user-greeting");
+            const rol = localStorage.getItem("rol");
+            const username = localStorage.getItem("username");
+            const rolNombre = localStorage.getItem("rolNombre"); // Asume que guardas el nombre del rol
+            
+            // Elementos del menú
+            const authItems = document.querySelectorAll(".auth-only");
+            const guestItems = document.querySelectorAll(".guest-only");
+            const clienteItems = document.querySelectorAll(".cliente-only");
+            const empleadoItems = document.querySelectorAll(".empleado-only");
+            const supervisorItems = document.querySelectorAll(".supervisor-only");
+            const adminItems = document.querySelectorAll(".admin-only");
+            const rootItems = document.querySelectorAll(".root-only");
+            const userGreeting = document.getElementById("user-greeting");
 
-    if (rol && username) {
-        // Usuario logueado
-        authItems.forEach(el => el.style.display = "inline");
-        guestItems.forEach(el => el.style.display = "none");
-        
-        // Mostrar nombre de usuario si existe el elemento
-        if (userGreeting) {
-            userGreeting.textContent = `Bienvenido, ${username}`;
-        }
+            if (rol && username) {
+                // Usuario logueado
+                authItems.forEach(el => el.style.display = "inline");
+                guestItems.forEach(el => el.style.display = "none");
+                
+                // Mostrar nombre de usuario
+                if (userGreeting) {
+                    userGreeting.textContent = `Bienvenido, ${username} (${rolNombre || rol})`;
+                }
 
-        // Mostrar elementos según rol
-        if (rol === "1") { // Cliente
-            clienteItems.forEach(el => el.style.display = "inline");
-            adminItems.forEach(el => el.style.display = "none");
-        } else if (rol === "2") { // Administrador
-            adminItems.forEach(el => el.style.display = "inline");
-            clienteItems.forEach(el => el.style.display = "none");
-        }
-    } else {
-        // Usuario no logueado
-        authItems.forEach(el => el.style.display = "none");
-        adminItems.forEach(el => el.style.display = "none");
-        clienteItems.forEach(el => el.style.display = "none");
-        guestItems.forEach(el => el.style.display = "inline");
-    }
-});
+                // Mostrar elementos según rol
+                switch(rol) {
+                    case "1": // Cliente
+                        clienteItems.forEach(el => el.style.display = "inline");
+                        break;
+                    case "2": // Empleado
+                        empleadoItems.forEach(el => el.style.display = "inline");
+                        break;
+                    case "3": // Supervisor
+                        supervisorItems.forEach(el => el.style.display = "inline");
+                        break;
+                    case "4": // Administrador
+                        adminItems.forEach(el => el.style.display = "inline");
+                        break;
+                    case "5": // Root
+                        rootItems.forEach(el => el.style.display = "inline");
+                        // Root ve todo - puedes agregar más items si es necesario
+                        clienteItems.forEach(el => el.style.display = "inline");
+                        empleadoItems.forEach(el => el.style.display = "inline");
+                        supervisorItems.forEach(el => el.style.display = "inline");
+                        adminItems.forEach(el => el.style.display = "inline");
+                        break;
+                }
+            } else {
+                // Usuario no logueado
+                authItems.forEach(el => el.style.display = "none");
+                clienteItems.forEach(el => el.style.display = "none");
+                empleadoItems.forEach(el => el.style.display = "none");
+                supervisorItems.forEach(el => el.style.display = "none");
+                adminItems.forEach(el => el.style.display = "none");
+                rootItems.forEach(el => el.style.display = "none");
+                guestItems.forEach(el => el.style.display = "inline");
+            }
+        });
 
         // Procesar login
         document.querySelector('.auth-form').addEventListener('submit', function(e) {
@@ -123,7 +165,6 @@
             const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value.trim();
 
-            // Cambia esta URL por la correcta de tu backend
             fetch("http://localhost:5118/api/usuario/login", {
                 method: "POST",
                 headers: {
@@ -133,7 +174,7 @@
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error("Usuario o contraseña incorrectos");
+                    return response.text().then(text => { throw new Error(text) });
                 }
                 return response.json();
             })
@@ -142,26 +183,20 @@
                 localStorage.setItem("rol", usuario.rolId);
                 localStorage.setItem("username", usuario.username);
                 localStorage.setItem("usuarioId", usuario.usuarioId);
+                localStorage.setItem("rolNombre", usuario.rolNombre); // Asume que el backend devuelve el nombre del rol
 
-                // Redirige según el rol
-                if (usuario.rolId == 1) { // Cliente
-                    window.location.href = "../Cliente/reservacion.html";
-                } else if (usuario.rolId == 2) { // Administrador
-                    window.location.href = "admin/dashboard.html";
-                } else {
-                    window.location.href = "index.html";
-                }
+                window.location.href = "inicio.html";
             })
             .catch(error => {
-                alert(error.message);
+                alert(error.message || "Error al iniciar sesión");
+                console.error("Error:", error);
             });
         });
 
-
         function cerrarSesion() {
-    localStorage.clear();
-    window.location.href = "index.html";
-}
+            localStorage.clear();
+            window.location.href = "index.html";
+        }
     </script>
 </body>
 </html>
